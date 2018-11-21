@@ -7,7 +7,7 @@ function buildPipeline (baseUrl) {
   const base = namespace(`${baseUrl.toString()}#`)
   const dataset = rdf.dataset()
   const root = base('pipeline')
-  const def = cf.dataset(dataset, root)
+  const def = cf(dataset, root)
 
   def
     .addOut(ns.rdf('type'), ns.p('Pipeline'))

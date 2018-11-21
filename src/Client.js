@@ -1,4 +1,4 @@
-const clownface = require('clownface').dataset
+const clownface = require('clownface')
 const ns = require('barnard59-core/lib/namespaces')
 const rdf = require('rdf-ext')
 const rdfFetch = require('rdf-fetch')

@@ -1,4 +1,4 @@
-const clownface = require('clownface').dataset
+const clownface = require('clownface')
 const express = require('express')
 const namespace = require('@rdfjs/namespace')
 const pageRank = require('../utils/pageRank')

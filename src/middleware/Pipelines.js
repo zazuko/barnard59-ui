@@ -1,4 +1,4 @@
-const clownface = require('clownface').dataset
+const clownface = require('clownface')
 const ns = require('../utils/namespaces')
 const rdf = require('rdf-ext')
 const Container = require('./Container')
