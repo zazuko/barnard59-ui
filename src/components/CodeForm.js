@@ -4,16 +4,16 @@ import Vue from 'vue/dist/vue.js'
 const types = [{
   id: 'ecmaScript - NamedNode',
   label: 'ECMAScript',
-  term: ns.code('ecmaScript')
+  term: ns.code('EcmaScript')
 }, {
   id: 'ecmaScript - Literal',
   label: 'ECMAScript (inline)',
-  term: ns.code('ecmaScript'),
+  term: ns.code('EcmaScript'),
   literal: true
 }, {
   id: 'ecmaScriptTemplateLiteral - Literal',
   label: 'ECMAScript Template Literal',
-  term: ns.code('ecmaScriptTemplateLiteral'),
+  term: ns.code('EcmaScriptTemplateLiteral'),
   literal: true
 }, {
   id: 'Pipeline - NamedNode',
@@ -44,7 +44,9 @@ export default Vue.component('code-form', {
           return null
         }
 
-        const term = this.node.term.datatype || this.node.out(ns.code('type')).term
+        const term = this.node.term.datatype ||
+          this.node.out(ns.rdf('type')).term ||
+          this.node.out(ns.code('type')).term
         const isLiteral = this.node.term.termType === 'Literal'
 
         const type = types.filter(type => type.term.equals(term) && Boolean(type.literal) === isLiteral)[0]
@@ -89,7 +91,7 @@ export default Vue.component('code-form', {
     },
     updateCode: function (term, literal, value) {
       if (!term && this.node) {
-        term = this.node.term.datatype || this.node.out(ns.code('type')).term
+        term = this.node.term.datatype || this.node.out(ns.rdf('type')).term || this.node.out(ns.code('type')).term
       }
 
       if (literal === null && this.node) {

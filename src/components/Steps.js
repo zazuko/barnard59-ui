@@ -12,7 +12,6 @@ export default Vue.component('steps', {
   data: function () {
     return {
       nodeLabel,
-      pipelineBaseUrl: `${document.location.href.split('#')[0]}#`,
       steps: []
     }
   },
@@ -37,7 +36,7 @@ export default Vue.component('steps', {
     add: function (index) {
       const step = this.pipeline.node(`${this.baseUrl}${index}`, { type: 'NamedNode' })
 
-      step.addOut(ns.p('operation'), this.pipeline.node('Hello World!', { datatype: ns.code('ecmaScriptTemplateLiteral') }))
+      step.addOut(ns.code('implementedBy'), this.pipeline.node('Hello World!', { datatype: ns.code('EcmaScriptTemplateLiteral') }))
 
       this.steps.splice(index, 0, step)
 
@@ -63,7 +62,7 @@ export default Vue.component('steps', {
         </tr>
         
         <tr v-for="(step, index) in steps">
-          <td><a href="#" v-on:click="$emit('input', step)">{{ nodeLabel(step) }}</a></td>
+          <td><a href="javascript:void(0)" v-on:click="$emit('input', step)">{{ nodeLabel(step) }}</a></td>
           <td>
             <button class="btn btn-success" v-on:click="add(index + 1)">+</button>
             <button class="btn btn-danger" v-on:click="remove(index)">-</button>

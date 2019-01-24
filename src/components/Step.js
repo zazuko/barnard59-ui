@@ -25,7 +25,7 @@ export default Vue.component('step', {
     <form v-if="step">
       <h1>{{ label() }}</h1>
       <h3>Operation</h3>
-      <code-form v-bind:parent="step" v-bind:property="ns.p('operation')"></code-form>
+      <code-form v-bind:parent="step" v-bind:property="ns.code('implementedBy')"></code-form>
     </form>
   `
 })

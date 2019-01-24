@@ -1,5 +1,6 @@
 import ns from '../utils/namespaces.js'
 import Vue from 'vue/dist/vue.js'
+import navigateTo from 'ld-navigation/fireNavigation'
 
 export default Vue.component('pipeline-selector', {
   props: [
@@ -24,7 +25,7 @@ export default Vue.component('pipeline-selector', {
     selected: function () {
       const pipelineIri = this.pipelines.get(this.selected).term
 
-      this.$emit('input', pipelineIri)
+      navigateTo(pipelineIri.value)
     }
   },
   template: `

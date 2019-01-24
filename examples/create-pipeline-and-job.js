@@ -1,7 +1,6 @@
 const Client = require('../src/Client')
 
-const baseUrl = 'http://localhost:8080/'
-const client = new Client(baseUrl)
+const client = new Client()
 
 client.createPipeline().then(pipelineIri => {
   console.log(`pipeline created at: ${pipelineIri}`)

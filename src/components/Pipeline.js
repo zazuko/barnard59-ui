@@ -1,4 +1,4 @@
-import ns from '../utils/namespaces'
+import rdf from 'rdf-ext'
 import Graph from './Graph.js'
 import Step from './Step.js'
 import Steps from './Steps.js'
@@ -37,14 +37,14 @@ export default Vue.component('pipeline', {
         return
       }
 
-      if (this.pipelineIri.value.indexOf('#') !== -1) {
-        this.baseUrl = `${this.pipelineIri.value.split('#')[0]}#`
+      if (this.pipelineIri.indexOf('#') !== -1) {
+        this.baseUrl = `${this.pipelineIri.split('#')[0]}#`
       } else {
-        this.baseUrl = this.pipelineIri.value.split('/').slice(0, -1).join('/')
+        this.baseUrl = this.pipelineIri.split('/').slice(0, -1).join('/')
       }
 
       this.client.fetch(this.pipelineIri).then(pipeline => {
-        pipeline = pipeline.node().has(ns.rdf('type', ns.p('Pipeline')))
+        pipeline = pipeline.node(rdf.namedNode(this.pipelineIri))
 
         if (!pipeline.term) {
           pipeline = null

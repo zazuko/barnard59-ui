@@ -17,18 +17,19 @@ function buildPipeline (baseUrl) {
           filename
             .addOut(ns.p('name'), 'filename')
             .addOut(ns.p('value'), 'test.csv')
+            .addOut(ns.rdf('type'), ns.p('Variable'))
         })
     })
     .addOut(ns.p('steps'), steps => {
       steps.addList(ns.p('stepList'), [
         def.node(base('readFile'))
-          .addOut(ns.p('operation'), code => {
+          .addOut(ns.code('implementedBy'), code => {
             code
               .addOut(ns.code('link'), def.node('node:fs#createReadStream', { type: 'NamedNode' }))
-              .addOut(ns.code('type'), ns.code('ecmaScript'))
+              .addOut(ns.rdf('type'), ns.code('EcmaScript'))
           })
-          .addList(ns.p('arguments'), [
-            def.node('${filename}', { datatype: ns.code('ecmaScriptTemplateLiteral') }) // eslint-disable-line no-template-curly-in-string
+          .addList(ns.code('arguments'), [
+            def.node('${filename}', { datatype: ns.code('EcmaScriptTemplateLiteral') }) // eslint-disable-line no-template-curly-in-string
           ])
       ])
     })

@@ -1,24 +1,26 @@
-import rdf from 'rdf-ext'
 import Client from '../Client.js'
 import Job from '../components/Job.js'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.js'
+import PageBase from './PageBase'
 
 export default Vue.component('job-page', {
   components: {
     Job,
-    Navigation
+    Navigation,
+    PageBase
   },
   data: function () {
     return {
-      client: new Client(`${document.location.origin}/`),
-      jobIri: rdf.namedNode(document.location.href)
+      client: new Client()
     }
   },
   template: `
-    <div>
-      <navigation v-bind:job-iri="jobIri"></navigation>
-      <job v-bind:client="client" v-bind:job-iri="jobIri"></job>
-    </div>
+    <PageBase>
+      <template slot-scope="slotProps">
+        <navigation v-bind:job-iri="slotProps.resourceIri"></navigation>
+        <job v-bind:client="client" v-bind:job-iri="slotProps.resourceIri"></job>
+      </template>
+    </PageBase>
   `
 })

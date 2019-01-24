@@ -1,4 +1,5 @@
 import Vue from 'vue/dist/vue.js'
+import * as config from '../config'
 
 export default Vue.component('navigation', {
   props: [
@@ -9,8 +10,8 @@ export default Vue.component('navigation', {
   },
   data: function () {
     return {
-      jobsBaseUrl: `${document.location.origin}/job/`,
-      pipelinesBaseUrl: `${document.location.origin}/pipeline/`
+      jobsBaseUrl: `${config.baseUrl}/job/`,
+      pipelinesBaseUrl: `${config.baseUrl}/pipeline/`
     }
   },
   methods: {
@@ -24,13 +25,13 @@ export default Vue.component('navigation', {
         <router-link class="nav-link" v-bind:to="{ path: '/job/' }">Jobs</router-link>
       </li>
       <li class="nav-item" v-if="jobIri">
-        <a class="nav-link" href="#">{{ (jobIri && jobIri.value).slice(jobsBaseUrl.length) }}</a>
+        <a class="nav-link" href="#">{{ jobIri.slice(jobsBaseUrl.length) }}</a>
       </li>
       <li class="nav-item" v-if="pipelineIri">
         <router-link class="nav-link" v-bind:to="{ path: '/pipeline/' }">Pipelines</router-link>
       </li>
       <li class="nav-item" v-if="pipelineIri">
-        <a class="nav-link" href="#">{{ (pipelineIri && pipelineIri.value).slice(pipelinesBaseUrl.length) }}</a>
+        <a class="nav-link" href="#">{{ pipelineIri.slice(pipelinesBaseUrl.length) }}</a>
       </li>
     </ul>
   `

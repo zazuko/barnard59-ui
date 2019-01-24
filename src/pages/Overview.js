@@ -1,4 +1,3 @@
-import url from 'url'
 import Client from '../Client.js'
 import JobSelector from '../components/JobSelector.js'
 import Vue from 'vue/dist/vue.js'
@@ -13,30 +12,16 @@ export default Vue.component('overview-page', {
   },
   data: function () {
     return {
-      client: new Client(`${document.location.origin}/`),
-      jobIri: null,
-      pipelineIri: null
-    }
-  },
-  watch: {
-    jobIri: function () {
-      const parts = url.parse(this.jobIri.value)
-
-      return this.$router.push([parts.path, parts.hash].join(''))
-    },
-    pipelineIri: function () {
-      const parts = url.parse(this.pipelineIri.value)
-
-      return this.$router.push([parts.path, parts.hash].join(''))
+      client: new Client()
     }
   },
   template: `
-    <div>
+    <PageBase>
       <navigation></navigation>
       <h1>Pipeline</h1>
-      <pipeline-selector v-bind:client="client" v-model="pipelineIri"></pipeline-selector>
+      <pipeline-selector v-bind:client="client"></pipeline-selector>
       <h1>Job</h1>
-      <job-selector v-bind:client="client" v-model="jobIri"></job-selector>
-    </div>
+      <job-selector v-bind:client="client"></job-selector>
+    </PageBase>
   `
 })

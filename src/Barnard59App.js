@@ -5,6 +5,7 @@ import PipelinePage from './pages/Pipeline.js'
 import PipelinesPage from './pages/Pipelines.js'
 import Router from 'vue-router/dist/vue-router.common.js'
 import Vue from 'vue/dist/vue.js'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 Vue.use(Router)
 

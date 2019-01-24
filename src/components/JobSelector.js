@@ -1,5 +1,6 @@
 import ns from '../utils/namespaces.js'
 import Vue from 'vue/dist/vue.js'
+import navigateTo from 'ld-navigation/fireNavigation'
 
 export default Vue.component('job-selector', {
   props: [
@@ -24,7 +25,7 @@ export default Vue.component('job-selector', {
     selected: function () {
       const jobIri = this.jobs.get(this.selected).term
 
-      this.$emit('input', jobIri)
+      navigateTo(jobIri.value)
     }
   },
   template: `

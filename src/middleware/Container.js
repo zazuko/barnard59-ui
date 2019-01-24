@@ -86,7 +86,7 @@ class Container {
     const contentNode = clownface(dataset, graph)
 
     return this.update(contentNode).then(() => {
-      res.status(201).end()
+      res.status(204).end()
     })
   }
 }

@@ -1,9 +1,9 @@
 const absoluteUrl = require('absolute-url')
 const express = require('express')
-const path = require('path')
 const rdf = require('rdf-ext')
 const rdfBodyParser = require('rdf-body-parser')
 const url = require('url')
+const cors = require('cors')
 const DatasetStore = require('rdf-store-dataset')
 const Pipelines = require('./src/middleware/Pipelines')
 const Jobs = require('./src/middleware/Jobs')
@@ -14,6 +14,8 @@ const app = express()
 const dataset = rdf.dataset()
 const store = new DatasetStore({ dataset })
 
+app.use(cors())
+
 app.use((req, res, next) => {
   process.stdout.write(`${req.method} ${req.url} `)
 
@@ -22,18 +24,6 @@ app.use((req, res, next) => {
   })
 
   next()
-})
-
-app.use(express.static('.build'))
-app.use(express.static('public'))
-app.use('/assets/bootstrap', express.static('node_modules/bootstrap/dist'))
-
-app.use((req, res, next) => {
-  if (!req.accepts('html')) {
-    return next()
-  }
-
-  res.sendFile(path.resolve('public/index.html'))
 })
 
 app.use(absoluteUrl())
