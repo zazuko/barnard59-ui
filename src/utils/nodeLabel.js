@@ -5,7 +5,7 @@ function nodeLabel (node) {
     return null
   }
 
-  const label = node.out(ns.rdf('label'))
+  const label = node.out(ns.rdfs('label'))
 
   if (label.value) {
     return label.value
