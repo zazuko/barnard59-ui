@@ -1,5 +1,8 @@
 import Vue from 'vue/dist/vue.js'
+import Nav from 'bootstrap-vue/es/components/navbar/index'
 import * as config from '../config'
+
+Vue.use(Nav)
 
 export default Vue.component('navigation', {
   props: [
@@ -17,22 +20,23 @@ export default Vue.component('navigation', {
   methods: {
   },
   template: `
-    <ul class="nav">
-      <li class="nav-item">
+  <b-navbar toggleable="md">
+  
+    <b-navbar-brand href="/">Barnard 59</b-navbar-brand>
+  
+    <b-collapse is-nav id="nav_collapse">
+      <b-navbar-nav>
         <router-link class="nav-link" v-bind:to="{ path: '/' }">Start</router-link>
-      </li>
-      <li class="nav-item" v-if="jobIri">
-        <router-link class="nav-link" v-bind:to="{ path: '/job/' }">Jobs</router-link>
-      </li>
-      <li class="nav-item" v-if="jobIri">
-        <a class="nav-link" href="#">{{ jobIri.slice(jobsBaseUrl.length) }}</a>
-      </li>
-      <li class="nav-item" v-if="pipelineIri">
-        <router-link class="nav-link" v-bind:to="{ path: '/pipeline/' }">Pipelines</router-link>
-      </li>
-      <li class="nav-item" v-if="pipelineIri">
-        <a class="nav-link" href="#">{{ pipelineIri.slice(pipelinesBaseUrl.length) }}</a>
-      </li>
-    </ul>
+        <router-link v-if="jobIri" class="nav-link" v-bind:to="{ path: '/job/' }">Jobs</router-link>
+        <b-nav-item v-if="jobIri" href="javascript:void()">
+          {{ jobIri.slice(jobsBaseUrl.length) }}
+        </b-nav-item>
+        <router-link v-if="pipelineIri" class="nav-link" v-bind:to="{ path: '/pipeline/' }">Pipelines</router-link>
+        <b-nav-item v-if="pipelineIri" href="javascript:void()">
+          {{ pipelineIri.slice(pipelinesBaseUrl.length) }}
+        </b-nav-item>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
   `
 })
