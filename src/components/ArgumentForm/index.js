@@ -75,6 +75,11 @@ export default Vue.component('argument-form', {
       to['@value'] = from['@value']
       this.editedFields.splice(this.editedFields.indexOf(index), 1)
       evt.preventDefault()
+    },
+    removeArgument: function (index) {
+      this.step['code:arguments'].splice(index, 1)
+      // shift index of edited elements
+      this.editedFields = this.editedFields.map(e => e >= index ? e - 1 : e)
     }
   },
   template: `
@@ -86,6 +91,7 @@ export default Vue.component('argument-form', {
       
       <template slot="actions" slot-scope="row">
           <b-button @click.stop="editArgument(row.index)">Edit</b-button>
+          <b-button @click.stop="removeArgument(row.index)" variant="danger">Delete</b-button>
       </template>
       <template slot="row-details" slot-scope="row">
           <b-form @submit.stop="saveArgument($event, row)">
