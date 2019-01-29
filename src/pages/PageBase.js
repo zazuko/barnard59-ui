@@ -1,5 +1,6 @@
 import Vue from 'vue/dist/vue'
 import LdNavigator from 'ld-navigation/LdNavigator'
+import Container from 'bootstrap-vue/es/components/layout/container'
 
 import 'ld-navigation/ld-navigator'
 import * as config from '../config'
@@ -7,6 +8,9 @@ import * as config from '../config'
 LdNavigator.base = config.baseUrl
 
 export default Vue.component('PageBase', {
+  components: {
+    'b-container': Container
+  },
   data: function () {
     return {
       baseUri: config.baseUrl
@@ -24,9 +28,9 @@ export default Vue.component('PageBase', {
     }
   },
   template: `
-    <div>
+    <b-container fluid>
       <ld-navigator v-bind:base="baseUri"></ld-navigator>
       <slot v-bind:resource-iri="resourceIri"></slot>
-    </div>
+    </b-container>
   `
 })
