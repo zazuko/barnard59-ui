@@ -10,7 +10,6 @@ const jsonldSerializer = new JsonldSerializer()
 export default Vue.component('graph', {
   props: [
     'graph',
-    'dataset',
     'jsonLd',
     'context',
     'syntax'
@@ -21,6 +20,11 @@ export default Vue.component('graph', {
     },
     jsonLd: function () {
       this.update()
+    },
+    graph: function () {
+      if (this.graph.dataset) {
+        this.dataset = this.graph.dataset
+      }
     },
     dataset: function () {
       if (this.syntax === 'json-ld') {
@@ -36,7 +40,8 @@ export default Vue.component('graph', {
   },
   data: function () {
     return {
-      graphStr: ''
+      graphStr: '',
+      dataset: {}
     }
   },
   methods: {

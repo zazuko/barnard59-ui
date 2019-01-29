@@ -60,7 +60,7 @@ export default Vue.component('job', {
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <graph v-bind:dataset="job && job._context[0].dataset"></graph>
+          <graph v-bind:graph="job"></graph>
         </div>
       </div>
     </div>
