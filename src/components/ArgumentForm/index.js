@@ -12,6 +12,9 @@ const types = {
   },
   'code:EcmaScriptTemplateLiteral': {
     text: 'ES6 template literal'
+  },
+  'code:EcmaScript': {
+    text: 'EcmaScript'
   }
 }
 
@@ -29,7 +32,8 @@ export default Vue.component('argument-form', {
   },
   data: () => ({
     types,
-    fields: [ 'index', 'value', 'actions' ]
+    fields: [ 'index', 'value', 'actions' ],
+    editedFields: []
   }),
   computed: {
     items: function () {
@@ -38,46 +42,65 @@ export default Vue.component('argument-form', {
       return this.step['code:arguments'].map((arg, index) => ({
         index: index + 1,
         ...arg,
-        _showDetails: false
+        _showDetails: this.editedFields.includes(index)
       }))
     }
   },
   methods: {
     saveArgument: function (evt, row) {
-      const args = this.step['code:arguments'][row.index]
-      args['@type'] = row.item['@type']
-      args['@value'] = row.item['@value']
-      row.toggleDetails()
-      evt.preventDefault()
+      this.endEditing(
+        evt,
+        row.index,
+        row.item,
+        this.step['code:arguments'][row.index])
     },
     revertArgument: function (evt, row) {
-      const args = this.step['code:arguments'][row.index]
-      row.item['@type'] = args['@type']
-      row.item['@value'] = args['@value']
-      row.toggleDetails()
+      this.endEditing(
+        evt,
+        row.index,
+        this.step['code:arguments'][row.index],
+        row.item)
+    },
+    addArgument: function () {
+      this.step['code:arguments'].push({})
+      this.editArgument(this.step['code:arguments'].length - 1)
+    },
+    editArgument: function (index) {
+      if (!this.editedFields.includes(index)) {
+        this.editedFields.push(index)
+      }
+    },
+    endEditing: function (evt, index, from, to) {
+      to['@type'] = from['@type']
+      to['@value'] = from['@value']
+      this.editedFields.splice(this.editedFields.indexOf(index), 1)
       evt.preventDefault()
     }
   },
   template: `
-<b-table :items="items" :fields="fields">
-    <template slot="value" slot-scope="data">
-        "{{data.item['@value']}}"^^{{data.item['@type']}}
-    </template>
-    
-    <template slot="actions" slot-scope="row">
-        <b-button @click.stop="row.toggleDetails">Edit</b-button>
-    </template>
-    <template slot="row-details" slot-scope="row">
-        <b-form @submit.stop="saveArgument($event, row)">
-            <b-form-group label="Type" label-for="type">
-                <b-select id="type" :options="types" v-model="row.item['@type']"></b-select>
-            </b-form-group>
-            <b-form-group label="Value" label-for="value">
-                <b-form-input id="value" v-model="row.item['@value']"></b-form-input>
-            </b-form-group>
-            <b-button type="submit" variant="primary">Save</b-button>
-            <b-button @click="revertArgument($event, row)" variant="secondary">Revert</b-button>
-        </b-form>        
-    </template>
-</b-table>`
+<div>
+  <b-table :items="items" :fields="fields">
+      <template slot="value" slot-scope="data">
+          "{{data.item['@value']}}"^^{{data.item['@type']}}
+      </template>
+      
+      <template slot="actions" slot-scope="row">
+          <b-button @click.stop="editArgument(row.index)">Edit</b-button>
+      </template>
+      <template slot="row-details" slot-scope="row">
+          <b-form @submit.stop="saveArgument($event, row)">
+              <b-form-group label="Type" label-for="type">
+                  <b-select id="type" :options="types" v-model="row.item['@type']"></b-select>
+              </b-form-group>
+              <b-form-group label="Value" label-for="value">
+                  <b-form-input id="value" v-model="row.item['@value']"></b-form-input>
+              </b-form-group>
+              <b-button type="submit" variant="primary">Save</b-button>
+              <b-button @click="revertArgument($event, row)" variant="secondary">Revert</b-button>
+          </b-form>        
+      </template>
+  </b-table>
+  
+  <b-button variant="primary" @click="addArgument">Add</b-button>
+</div>`
 })
