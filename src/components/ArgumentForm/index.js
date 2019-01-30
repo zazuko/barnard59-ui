@@ -1,10 +1,10 @@
 import Vue from 'vue/dist/vue.js'
-import FormGroup from 'bootstrap-vue/es/components/form-group/form-group'
-import Form from 'bootstrap-vue/es/components/form/form'
-import FormInput from 'bootstrap-vue/es/components/form-input/form-input'
+import Forms from 'bootstrap-vue/es/components/form'
 import Button from 'bootstrap-vue/es/components/button/button'
 import Table from 'bootstrap-vue/es/components/table/table'
 import Select from 'bootstrap-vue/es/components/form-select/form-select'
+
+Vue.use(Forms)
 
 const types = {
   'p:variableName': {
@@ -25,10 +25,7 @@ export default Vue.component('argument-form', {
   components: {
     'b-table': Table,
     'b-select': Select,
-    'b-button': Button,
-    'b-form': Form,
-    'b-form-input': FormInput,
-    'b-form-group': FormGroup
+    'b-button': Button
   },
   data: () => ({
     types,

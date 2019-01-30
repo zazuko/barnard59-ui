@@ -1,5 +1,6 @@
 import nodeLabel from '../utils/nodeLabel.js'
 import Vue from 'vue/dist/vue.js'
+import Button from 'bootstrap-vue/es/components/button/button'
 
 export default Vue.component('steps', {
   props: [
@@ -7,6 +8,7 @@ export default Vue.component('steps', {
     'steps'
   ],
   components: {
+    'b-button': Button
   },
   data: function () {
     return {
@@ -28,14 +30,14 @@ export default Vue.component('steps', {
       <table class="table">
         <tr>
           <td></td>
-          <td><button class="btn btn-success" v-on:click="add(0)">+</button></td>
+          <td><b-button variant="success" v-on:click="add(0)">+</b-button></td>
         </tr>
         
         <tr v-for="(step, index) in steps">
           <td><a href="javascript:void(0)" v-on:click="$emit('input', step)">{{step.label || step.id}}</a></td>
           <td>
-            <button class="btn btn-success" v-on:click="add(index + 1)">+</button>
-            <button class="btn btn-danger" v-on:click="remove(index)">-</button>
+            <b-button variant="success" v-on:click="add(index + 1)">+</b-button>
+            <b-button variant="danger" v-on:click="remove(index)">-</b-button>
           </td>
         </tr>
       </table>

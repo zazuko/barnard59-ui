@@ -6,6 +6,7 @@ import Vue from 'vue/dist/vue.js'
 import ns from '../utils/namespaces.js'
 import { promises as jsonld } from 'jsonld'
 import NtriplesSerializer from '@rdfjs/serializer-ntriples'
+import Button from 'bootstrap-vue/es/components/button/button'
 
 const ntriplesSerializer = new NtriplesSerializer()
 
@@ -35,7 +36,8 @@ export default Vue.component('pipeline', {
   components: {
     Graph,
     Step,
-    Steps
+    Steps,
+    'b-button': Button
   },
   data: function () {
     return {
@@ -119,7 +121,7 @@ export default Vue.component('pipeline', {
                  v-on:step-added="addStep"
                  v-on:step-deleted="deleteStep"
                  v-model="step"></steps>
-          <button class="btn btn-primary" v-on:click="saveClicked">save</button>
+          <b-button variant="primary" v-on:click="saveClicked">save</b-button>
         </div>
         <div class="col-lg-9">
           <step v-bind:pipeline="pipeline" v-bind:step="step"></step>

@@ -1,32 +1,40 @@
-import ns from '../../utils/namespaces.js'
 import Vue from 'vue/dist/vue.js'
+import Forms from 'bootstrap-vue/es/components/form'
+import FormGroup from 'bootstrap-vue/es/components/form-group/form-group'
+import Select from 'bootstrap-vue/es/components/form-select/form-select'
 import './Pipeline'
 import './EcmaScript'
 import './EcmaScriptLiteral'
 import './EcmaScriptTemplateLiteral'
 
+Vue.use(Forms)
+
 const types = [{
-  id: 'ecmaScript - NamedNode',
   label: 'ECMAScript',
-  term: 'code:EcmaScript',
-  component: 'implemented-by-ecmascript'
+  value: {
+    term: 'code:EcmaScript',
+    component: 'implemented-by-ecmascript'
+  }
 }, {
-  id: 'ecmaScript - Literal',
   label: 'ECMAScript (inline)',
-  term: 'code:EcmaScript',
-  component: 'implemented-by-ecmascript-literal',
-  literal: true
+  value: {
+    term: 'code:EcmaScript',
+    component: 'implemented-by-ecmascript-literal',
+    literal: true
+  }
 }, {
-  id: 'ecmaScriptTemplateLiteral - Literal',
   label: 'ECMAScript Template Literal',
-  term: 'code:EcmaScriptTemplateLiteral',
-  component: 'implemented-by-template-literal',
-  literal: true
+  value: {
+    term: 'code:EcmaScriptTemplateLiteral',
+    component: 'implemented-by-template-literal',
+    literal: true
+  }
 }, {
-  id: 'Pipeline - NamedNode',
   label: 'Pipeline',
-  term: ns.p('Pipeline').value,
-  component: 'implemented-by-pipeline'
+  value: {
+    term: 'p:Pipeline',
+    component: 'implemented-by-pipeline'
+  }
 }]
 
 export default Vue.component('code-form', {
@@ -34,6 +42,8 @@ export default Vue.component('code-form', {
     'operation'
   ],
   components: {
+    'b-select': Select,
+    'b-form-group': FormGroup
   },
   data: function () {
     return {
@@ -46,12 +56,12 @@ export default Vue.component('code-form', {
     const operationType = this.operation['code:implementedBy']['@type']
     const isLiteral = !!this.operation['code:implementedBy']['@value']
 
-    this.type = types.filter(type => type.term === operationType && (type.literal ? type.literal === isLiteral : true))[0]
+    this.type = types.filter(type => type.value.term === operationType && (type.literal ? type.literal === isLiteral : true))[0].value
   },
   computed: {
     implementationForm: function () {
-      const type = types.find(t => t.term === this.type.term && t.literal === this.type.literal)
-      return type ? type.component : null
+      const type = types.find(t => t.value.term === this.type.term && t.value.literal === this.type.literal)
+      return type ? type.value.component : null
     }
   },
   watch: {
@@ -59,7 +69,7 @@ export default Vue.component('code-form', {
       const operationType = this.operation['code:implementedBy']['@type']
       const isLiteral = !!this.operation['code:implementedBy']['@value']
 
-      this.type = types.filter(type => type.term === operationType && type.literal === isLiteral)[0]
+      this.type = types.filter(type => type.term === operationType && type.literal === isLiteral)[0].value
     },
     type: function () {
       const previous = this.operation['code:implementedBy']
@@ -76,19 +86,13 @@ export default Vue.component('code-form', {
     }
   },
   template: `
-    <form>
-      <div class="form-group">
-        <label for="">type</label>
-        <select class="form-control" v-model="type">
-          <option v-for="type in types" v-bind:value="type">
-            {{ type.label }}
-          </option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="">code</label>
+    <b-form>
+      <b-form-group label="type">
+        <b-select :options="types" v-model="type" text-field="label"></b-select>
+      </b-form-group>
+      <b-form-group label="code">
         <component v-bind:is="implementationForm" v-bind:implementation="operation['code:implementedBy']"></component>
-      </div>
-    </form>
+      </b-form-group>
+    </b-form>
   `
 })
