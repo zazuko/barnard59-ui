@@ -1,6 +1,6 @@
 <script>
 import Graph from './Graph.vue'
-import Step from './Step.js'
+import Step from './Step.vue'
 import Steps from './Steps.vue'
 import Variables from './Variables.vue'
 import Button from 'bootstrap-vue/es/components/button/button'

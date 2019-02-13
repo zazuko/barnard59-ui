@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue.js'
+<script>
 import FormGroup from 'bootstrap-vue/es/components/form-group/form-group'
 import Form from 'bootstrap-vue/es/components/form/form'
 import FormInput from 'bootstrap-vue/es/components/form-input/form-input'
@@ -18,7 +18,7 @@ const types = {
   }
 }
 
-export default Vue.component('argument-form', {
+export default {
   props: [
     'step'
   ],
@@ -39,8 +39,10 @@ export default Vue.component('argument-form', {
     }
   },
   computed: {
-    items: function () {
-      if (!this.stepArguments) return []
+    items () {
+      if (!this.stepArguments) {
+        return []
+      }
 
       return this.stepArguments.map((arg, index) => ({
         index: index + 1,
@@ -50,7 +52,7 @@ export default Vue.component('argument-form', {
     }
   },
   watch: {
-    step: function () {
+    step () {
       if (!this.step['code:arguments']) {
         this.stepArguments = []
         return
@@ -60,66 +62,69 @@ export default Vue.component('argument-form', {
     }
   },
   methods: {
-    saveArgument: function (evt, row) {
+    saveArgument (evt, row) {
       this.endEditing(
         evt,
         row.index,
         row.item,
         this.stepArguments[row.index])
     },
-    revertArgument: function (evt, row) {
+    revertArgument (evt, row) {
       this.endEditing(
         evt,
         row.index,
         this.stepArguments[row.index],
         row.item)
     },
-    addArgument: function () {
+    addArgument () {
       this.stepArguments.push({})
       this.editArgument(this.stepArguments.length - 1)
     },
-    editArgument: function (index) {
+    editArgument (index) {
       if (!this.editedFields.includes(index)) {
         this.editedFields.push(index)
       }
     },
-    endEditing: function (evt, index, from, to) {
+    endEditing (evt, index, from, to) {
       to['@type'] = from['@type']
       to['@value'] = from['@value']
       this.editedFields.splice(this.editedFields.indexOf(index), 1)
       evt.preventDefault()
     },
-    removeArgument: function (index) {
+    removeArgument (index) {
       this.stepArguments.splice(index, 1)
       // shift index of edited elements
       this.editedFields = this.editedFields.map(e => e >= index ? e - 1 : e)
     }
-  },
-  template: `
-<div>
-  <b-table :items="items" :fields="fields">
+  }
+}
+</script>
+
+<template>
+  <div>
+    <b-table :items="items" :fields="fields">
       <template slot="value" slot-scope="data">
-          "{{data.item['@value']}}"^^{{data.item['@type']}}
+        "{{ data.item['@value'] }}"^^{{ data.item['@type'] }}
       </template>
-      
+
       <template slot="actions" slot-scope="row">
-          <b-button @click.stop="editArgument(row.index)">Edit</b-button>
-          <b-button @click.stop="removeArgument(row.index)" variant="danger">Delete</b-button>
+        <b-button @click.stop="editArgument(row.index)">Edit</b-button>
+        <b-button @click.stop="removeArgument(row.index)" variant="danger">Delete</b-button>
       </template>
       <template slot="row-details" slot-scope="row">
-          <b-form @submit.stop="saveArgument($event, row)">
-              <b-form-group label="Type" label-for="type">
-                  <b-select id="type" :options="types" v-model="row.item['@type']"></b-select>
-              </b-form-group>
-              <b-form-group label="Value" label-for="value">
-                  <b-form-input id="value" v-model="row.item['@value']"></b-form-input>
-              </b-form-group>
-              <b-button type="submit" variant="primary">Save</b-button>
-              <b-button @click="revertArgument($event, row)" variant="secondary">Revert</b-button>
-          </b-form>        
+        <b-form @submit.stop="saveArgument($event, row)">
+          <b-form-group label="Type" label-for="type">
+            <b-select id="type" :options="types" v-model="row.item['@type']"></b-select>
+          </b-form-group>
+          <b-form-group label="Value" label-for="value">
+            <b-form-input id="value" v-model="row.item['@value']"></b-form-input>
+          </b-form-group>
+          <b-button type="submit" variant="primary">Save</b-button>
+          <b-button @click="revertArgument($event, row)" variant="secondary">Revert</b-button>
+        </b-form>
       </template>
-  </b-table>
-  
-  <b-button variant="primary" @click="addArgument">Add</b-button>
-</div>`
-})
+    </b-table>
+
+    <b-button variant="primary" @click="addArgument">Add</b-button>
+  </div>
+</template>
