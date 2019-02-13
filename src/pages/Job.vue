@@ -1,19 +1,19 @@
+<script>
 import Client from '../Client.js'
 import Job from '../components/Job.vue'
-import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.vue'
-import PageBase from './PageBase'
+import PageBase from './PageBase.vue'
 import store from '../store'
 import LdNavigator from 'ld-navigation/LdNavigator'
 
-export default Vue.component('job-page', {
+export default {
   store,
   components: {
     Job,
     Navigation,
     PageBase
   },
-  data: function () {
+  data () {
     return {
       client: new Client()
     }
@@ -22,13 +22,15 @@ export default Vue.component('job-page', {
     resourceIri () {
       return LdNavigator.resourceUrl
     }
-  },
-  template: `
-    <PageBase>
-      <template slot-scope="slotProps">
-        <navigation :job-iri="$store.state.resourceIri"></navigation>
-        <job :client="client" :job-iri="resourceIri"></job>
-      </template>
-    </PageBase>
-  `
-})
+  }
+}
+</script>
+
+<template>
+  <page-base>
+    <template>
+      <navigation :job-iri="$store.state.resourceIri"></navigation>
+      <job :client="client" :job-iri="resourceIri"></job>
+    </template>
+  </page-base>
+</template>

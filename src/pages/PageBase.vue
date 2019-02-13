@@ -1,29 +1,30 @@
-import Vue from 'vue/dist/vue'
+<script>
 import LdNavigator from 'ld-navigation/LdNavigator'
 import Container from 'bootstrap-vue/es/components/layout/container'
 
 import 'ld-navigation/ld-navigator'
 import * as config from '../config'
 
-export default Vue.component('PageBase', {
+export default {
   components: {
     'b-container': Container
   },
-  data: function () {
+  data () {
     return {
       baseUri: config.baseUrl
     }
   },
-  mounted: function () {
+  mounted () {
     this.$el.querySelector('ld-navigator')
       .addEventListener('resource-url-changed', () => {
         this.$router.replace(`/${LdNavigator.statePath}`)
       })
-  },
-  template: `
-    <b-container fluid>
-      <ld-navigator v-bind:base="baseUri"></ld-navigator>
-      <slot></slot>
-    </b-container>
-  `
-})
+  }
+}
+</script>
+<template>
+  <b-container fluid>
+    <ld-navigator :base="baseUri"></ld-navigator>
+    <slot></slot>
+  </b-container>
+</template>
