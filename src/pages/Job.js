@@ -3,8 +3,11 @@ import Job from '../components/Job.js'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.js'
 import PageBase from './PageBase'
+import store from '../store'
+import LdNavigator from 'ld-navigation/LdNavigator'
 
 export default Vue.component('job-page', {
+  store,
   components: {
     Job,
     Navigation,
@@ -15,11 +18,16 @@ export default Vue.component('job-page', {
       client: new Client()
     }
   },
+  computed: {
+    resourceIri () {
+      return LdNavigator.resourceUrl
+    }
+  },
   template: `
     <PageBase>
       <template slot-scope="slotProps">
-        <navigation v-bind:job-iri="slotProps.resourceIri"></navigation>
-        <job v-bind:client="client" v-bind:job-iri="slotProps.resourceIri"></job>
+        <navigation :job-iri="$store.state.resourceIri"></navigation>
+        <job :client="client" :job-iri="resourceIri"></job>
       </template>
     </PageBase>
   `

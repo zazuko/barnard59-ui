@@ -30,20 +30,33 @@ export default Vue.component('argument-form', {
     'b-form-input': FormInput,
     'b-form-group': FormGroup
   },
-  data: () => ({
-    types,
-    fields: [ 'index', 'value', 'actions' ],
-    editedFields: []
-  }),
+  data: (props) => {
+    return {
+      types,
+      fields: ['index', 'value', 'actions'],
+      editedFields: [],
+      stepArguments: props.step['code:arguments'].map(a => ({ ...a }))
+    }
+  },
   computed: {
     items: function () {
-      if (!this.step) return []
+      if (!this.stepArguments) return []
 
-      return this.step['code:arguments'].map((arg, index) => ({
+      return this.stepArguments.map((arg, index) => ({
         index: index + 1,
         ...arg,
         _showDetails: this.editedFields.includes(index)
       }))
+    }
+  },
+  watch: {
+    step: function () {
+      if (!this.step['code:arguments']) {
+        this.stepArguments = []
+        return
+      }
+
+      this.stepArguments = this.step['code:arguments'].map(a => ({ ...a }))
     }
   },
   methods: {
@@ -52,18 +65,18 @@ export default Vue.component('argument-form', {
         evt,
         row.index,
         row.item,
-        this.step['code:arguments'][row.index])
+        this.stepArguments[row.index])
     },
     revertArgument: function (evt, row) {
       this.endEditing(
         evt,
         row.index,
-        this.step['code:arguments'][row.index],
+        this.stepArguments[row.index],
         row.item)
     },
     addArgument: function () {
-      this.step['code:arguments'].push({})
-      this.editArgument(this.step['code:arguments'].length - 1)
+      this.stepArguments.push({})
+      this.editArgument(this.stepArguments.length - 1)
     },
     editArgument: function (index) {
       if (!this.editedFields.includes(index)) {
@@ -77,7 +90,7 @@ export default Vue.component('argument-form', {
       evt.preventDefault()
     },
     removeArgument: function (index) {
-      this.step['code:arguments'].splice(index, 1)
+      this.stepArguments.splice(index, 1)
       // shift index of edited elements
       this.editedFields = this.editedFields.map(e => e >= index ? e - 1 : e)
     }

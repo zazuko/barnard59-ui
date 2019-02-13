@@ -1,8 +1,8 @@
-import Client from '../Client.js'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.js'
 import Pipeline from '../components/Pipeline.js'
 import PageBase from './PageBase'
+import store from '../store'
 
 export default Vue.component('pipeline-page', {
   components: {
@@ -10,16 +10,12 @@ export default Vue.component('pipeline-page', {
     Pipeline,
     PageBase
   },
-  data: function () {
-    return {
-      client: new Client()
-    }
-  },
+  store,
   template: `
     <PageBase>
       <template slot-scope="slotProps">
-        <navigation v-bind:pipeline-iri="slotProps.resourceIri"></navigation>
-        <pipeline v-bind:client="client" v-bind:pipeline-iri="slotProps.resourceIri"></pipeline>
+        <navigation :pipeline-iri="$store.state.resourceIri"></navigation>
+        <pipeline></pipeline>
       </template>
     </PageBase>
   `

@@ -1,0 +1,7 @@
+export const REPLACE_VARIABLES = 'replace variables'
+export const STEP_SELECTED = 'step selected'
+export const STEP_REMOVED = 'step removed'
+export const STEP_ADDED = 'step added'
+export const STEP_UPDATED = 'step updated'
+export const IRI_SET = 'pipeline IRI set'
+export const PIPELINE_LOADED = 'pipeline loaded'

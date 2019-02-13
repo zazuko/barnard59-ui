@@ -5,8 +5,6 @@ import Container from 'bootstrap-vue/es/components/layout/container'
 import 'ld-navigation/ld-navigator'
 import * as config from '../config'
 
-LdNavigator.base = config.baseUrl
-
 export default Vue.component('PageBase', {
   components: {
     'b-container': Container
@@ -22,15 +20,10 @@ export default Vue.component('PageBase', {
         this.$router.replace(`/${LdNavigator.statePath}`)
       })
   },
-  computed: {
-    resourceIri: () => {
-      return LdNavigator.resourceUrl
-    }
-  },
   template: `
     <b-container fluid>
       <ld-navigator v-bind:base="baseUri"></ld-navigator>
-      <slot v-bind:resource-iri="resourceIri"></slot>
+      <slot></slot>
     </b-container>
   `
 })

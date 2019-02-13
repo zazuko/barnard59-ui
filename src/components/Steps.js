@@ -1,30 +1,23 @@
-import nodeLabel from '../utils/nodeLabel.js'
 import Vue from 'vue/dist/vue.js'
 import Button from 'bootstrap-vue/es/components/button/button'
+import { createNamespacedHelpers } from 'vuex'
+import { addStep, selectStep, deleteStep } from '../store/pipeline-actions'
+
+const { mapGetters, mapActions } = createNamespacedHelpers('pipeline')
 
 export default Vue.component('steps', {
-  props: [
-    'baseUrl',
-    'steps'
-  ],
+  computed: mapGetters({
+    steps: 'steps'
+  }),
   components: {
     'b-button': Button
   },
-  data: function () {
-    return {
-      nodeLabel
-    }
-  },
   methods: {
-    add: function (index) {
-      this.$emit('step-added', index)
-    },
-    remove: function (index) {
-      this.$emit('step-deleted', index)
-    },
-    selected: function (step) {
-      this.$emit('step-click', step)
-    }
+    ...mapActions({
+      add: addStep,
+      remove: deleteStep,
+      select: selectStep
+    })
   },
   template: `
       <table class="table">
@@ -34,7 +27,7 @@ export default Vue.component('steps', {
         </tr>
         
         <tr v-for="(step, index) in steps">
-          <td><a href="javascript:void(0)" v-on:click="$emit('input', step)">{{step.label || step.id}}</a></td>
+          <td><a href="javascript:void(0)" v-on:click="select(step)">{{step.label || step.id}}</a></td>
           <td>
             <b-button variant="success" v-on:click="add(index + 1)">+</b-button>
             <b-button variant="danger" v-on:click="remove(index)">-</b-button>

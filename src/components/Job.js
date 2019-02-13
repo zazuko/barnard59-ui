@@ -60,7 +60,7 @@ export default Vue.component('job', {
       </div>
       <div class="row">
         <div class="col-lg-12">
-          <graph v-bind:graph="job"></graph>
+          <graph :graph="job"></graph>
         </div>
       </div>
     </div>

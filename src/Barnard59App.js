@@ -7,8 +7,11 @@ import Router from 'vue-router/dist/vue-router.common.js'
 import Vue from 'vue/dist/vue.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import LdNavigator from 'ld-navigation/LdNavigator'
+import * as config from './config'
 
 Vue.use(Router)
+LdNavigator.base = config.baseUrl
 
 const routes = [{
   path: '/',

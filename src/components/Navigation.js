@@ -1,6 +1,5 @@
 import Vue from 'vue/dist/vue.js'
 import Nav from 'bootstrap-vue/es/components/navbar/index'
-import * as config from '../config'
 
 Vue.use(Nav)
 
@@ -13,8 +12,8 @@ export default Vue.component('navigation', {
   },
   data: function () {
     return {
-      jobsBaseUrl: `${config.baseUrl}/job/`,
-      pipelinesBaseUrl: `${config.baseUrl}/pipeline/`
+      jobsBaseUrl: `/job/`,
+      pipelinesBaseUrl: `/pipeline/`
     }
   },
   methods: {
@@ -28,13 +27,13 @@ export default Vue.component('navigation', {
       <b-navbar-nav>
         <router-link class="nav-link" v-bind:to="{ path: '/' }">Start</router-link>
         <router-link v-if="jobIri" class="nav-link" v-bind:to="{ path: '/job/' }">Jobs</router-link>
-        <b-nav-item v-if="jobIri" href="javascript:void()">
+        <router-link v-if="jobIri" class="nav-link" v-bind:to="{ path: jobIri }">
           {{ jobIri.slice(jobsBaseUrl.length) }}
-        </b-nav-item>
+        </router-link>
         <router-link v-if="pipelineIri" class="nav-link" v-bind:to="{ path: '/pipeline/' }">Pipelines</router-link>
-        <b-nav-item v-if="pipelineIri" href="javascript:void()">
+        <router-link v-if="pipelineIri" class="nav-link" v-bind:to="{ path: pipelineIri }">
           {{ pipelineIri.slice(pipelinesBaseUrl.length) }}
-        </b-nav-item>
+        </router-link>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>

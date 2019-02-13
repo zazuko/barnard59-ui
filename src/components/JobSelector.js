@@ -1,25 +1,18 @@
-import ns from '../utils/namespaces.js'
 import Vue from 'vue/dist/vue.js'
 import navigateTo from 'ld-navigation/fireNavigation'
+import { mapState } from 'vuex'
 
 export default Vue.component('job-selector', {
-  props: [
-    'client'
-  ],
-  components: {
-  },
   data: function () {
     return {
-      selected: null,
-      jobs: new Map()
+      selected: null
     }
   },
+  computed: mapState({
+    jobs: state => state.jobs.items
+  }),
   created: function () {
-    this.client.fetchJobs().then(jobs => {
-      this.jobs = jobs.out(ns.schema('hasPart')).toArray().reduce((jobs, job) => {
-        return jobs.set(job.value, job)
-      }, new Map())
-    }).catch(err => console.error(err))
+    this.$store.dispatch('fetchJobs')
   },
   watch: {
     selected: function () {

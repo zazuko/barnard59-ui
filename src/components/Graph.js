@@ -18,8 +18,11 @@ export default Vue.component('graph', {
     context: function () {
       this.update()
     },
-    jsonLd: function () {
-      this.update()
+    jsonLd: {
+      handler: function () {
+        this.update()
+      },
+      deep: true
     },
     graph: function () {
       if (this.graph.dataset) {

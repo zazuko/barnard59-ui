@@ -1,4 +1,4 @@
-import Client from '../Client.js'
+import store from '../store'
 import JobSelector from '../components/JobSelector.js'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.js'
@@ -10,18 +10,14 @@ export default Vue.component('overview-page', {
     Navigation,
     PipelineSelector
   },
-  data: function () {
-    return {
-      client: new Client()
-    }
-  },
+  store,
   template: `
     <PageBase>
       <navigation></navigation>
       <h1>Pipeline</h1>
-      <pipeline-selector v-bind:client="client"></pipeline-selector>
+      <pipeline-selector></pipeline-selector>
       <h1>Job</h1>
-      <job-selector v-bind:client="client"></job-selector>
+      <job-selector></job-selector>
     </PageBase>
   `
 })
