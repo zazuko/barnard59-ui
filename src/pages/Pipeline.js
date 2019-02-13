@@ -1,5 +1,5 @@
 import Vue from 'vue/dist/vue.js'
-import Navigation from '../components/Navigation.js'
+import Navigation from '../components/Navigation.vue'
 import Pipeline from '../components/Pipeline.js'
 import PageBase from './PageBase'
 import store from '../store'
