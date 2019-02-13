@@ -2,6 +2,7 @@ const { resolve } = require('path')
 const IS_DEV_SERVER = process.argv.find(arg => arg.includes('webpack-dev-server'))
 const ENV = process.argv.find(arg => arg.includes('NODE_ENV=production')) ? 'production' : 'development'
 const OUTPUT_PATH = IS_DEV_SERVER ? resolve('.') : resolve('.build')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   mode: ENV,
@@ -16,9 +17,15 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      }, {
+        test: /\.vue$/,
+        use: 'vue-loader'
       }
     ]
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   devServer: {
     contentBase: OUTPUT_PATH,
     compress: true,
