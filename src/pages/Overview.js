@@ -1,5 +1,5 @@
 import store from '../store'
-import JobSelector from '../components/JobSelector.js'
+import JobSelector from '../components/JobSelector.vue'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.vue'
 import PipelineSelector from '../components/PipelineSelector.vue'
