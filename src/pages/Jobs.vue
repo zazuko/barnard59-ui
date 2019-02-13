@@ -2,8 +2,10 @@
 import JobSelector from '../components/JobSelector.vue'
 import Navigation from '../components/Navigation.vue'
 import PageBase from './PageBase.vue'
+import store from '../store'
 
 export default {
+  store,
   components: {
     JobSelector,
     Navigation,
