@@ -1,11 +1,12 @@
+<script>
 import Vue from 'vue/dist/vue.js'
 import Forms from 'bootstrap-vue/es/components/form'
 import FormGroup from 'bootstrap-vue/es/components/form-group/form-group'
 import Select from 'bootstrap-vue/es/components/form-select/form-select'
-import './Pipeline'
-import './EcmaScript'
-import './EcmaScriptLiteral'
-import './EcmaScriptTemplateLiteral'
+import ImplementedByPipeline from './Pipeline.vue'
+import ImplementedByEcmascript from './EcmaScript.vue'
+import ImplementedByEcmascriptLiteral from './EcmaScriptLiteral.vue'
+import ImplementedByTemplateLiteral from './EcmaScriptTemplateLiteral.vue'
 
 Vue.use(Forms)
 
@@ -39,52 +40,58 @@ const types = [{
   }
 }]
 
-export default Vue.component('code-form', {
+export default {
   props: [
     'operation'
   ],
   components: {
     'b-select': Select,
-    'b-form-group': FormGroup
+    'b-form-group': FormGroup,
+    ImplementedByEcmascript,
+    ImplementedByPipeline,
+    ImplementedByEcmascriptLiteral,
+    ImplementedByTemplateLiteral
   },
-  data: function () {
+  data () {
     return {
       types,
       type: null
     }
   },
-  created: function () {
+  created () {
     const operationType = this.operation['code:implementedBy']['@type']
     const isLiteral = !!this.operation['code:implementedBy']['@value']
 
     this.type = types.filter(type => type.value.term === operationType && type.value.literal === isLiteral)[0].value
   },
   computed: {
-    implementation: function () {
+    implementation () {
       return { ...this.operation['code:implementedBy'] }
     }
   },
   watch: {
-    operation: function () {
+    operation () {
       const operationType = this.operation['code:implementedBy']['@type']
       const isLiteral = !!this.operation['code:implementedBy']['@value']
 
       this.type = types.filter(type => type.value.term === operationType && type.value.literal === isLiteral)[0].value
     },
-    type: function () {
+    type () {
       if (this.type) {
         this.implementation['@type'] = this.type.term
       }
     }
-  },
-  template: `
-    <b-form>
-      <b-form-group label="type">
-        <b-select :options="types" v-model="type" text-field="label"></b-select>
-      </b-form-group>
-      <b-form-group label="code" v-if="type">
-        <component v-bind:is="type.component" v-bind="{ implementation }"></component>
-      </b-form-group>      
-    </b-form>
-  `
-})
+  }
+}
+</script>
+
+<template>
+  <b-form>
+    <b-form-group label="type">
+      <b-select :options="types" v-model="type" text-field="label"></b-select>
+    </b-form-group>
+    <b-form-group label="code" v-if="type">
+      <component :is="type.component" v-bind="{ implementation }"></component>
+    </b-form-group>
+  </b-form>
+</template>

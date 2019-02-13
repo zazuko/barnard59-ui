@@ -1,4 +1,4 @@
-import CodeForm from './CodeForm'
+import CodeForm from './CodeForm/index.vue'
 import ArgumentForm from './ArgumentForm'
 import Vue from 'vue/dist/vue.js'
 import Tabs from 'bootstrap-vue/es/components/tabs/tabs'
