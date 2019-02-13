@@ -1,5 +1,5 @@
 import Client from '../Client.js'
-import Job from '../components/Job.js'
+import Job from '../components/Job.vue'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.vue'
 import PageBase from './PageBase'
