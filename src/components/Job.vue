@@ -1,6 +1,6 @@
 <script>
 import ns from '../utils/namespaces'
-import Graph from './Graph.js'
+import Graph from './Graph.vue'
 
 export default {
   props: [

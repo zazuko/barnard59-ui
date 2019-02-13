@@ -1,4 +1,4 @@
-import Graph from './Graph.js'
+import Graph from './Graph.vue'
 import Step from './Step.js'
 import Steps from './Steps.vue'
 import Variables from './Variables.vue'

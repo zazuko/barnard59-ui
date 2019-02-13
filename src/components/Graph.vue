@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue.js'
+<script>
 import Readable from 'readable-stream'
 import rdf from 'rdf-ext'
 import JsonldParser from '@rdfjs/parser-jsonld'
@@ -7,7 +7,7 @@ import JsonldSerializer from '@rdfjs/serializer-jsonld'
 const jsonldParser = new JsonldParser()
 const jsonldSerializer = new JsonldSerializer()
 
-export default Vue.component('graph', {
+export default {
   props: [
     'graph',
     'jsonLd',
@@ -15,41 +15,44 @@ export default Vue.component('graph', {
     'syntax'
   ],
   watch: {
-    context: function () {
+    context () {
       this.update()
     },
     jsonLd: {
-      handler: function () {
+      handler () {
         this.update()
       },
       deep: true
     },
-    graph: function () {
+    graph () {
       if (this.graph.dataset) {
         this.dataset = this.graph.dataset
       }
     },
-    dataset: function () {
+    dataset () {
       if (this.syntax === 'json-ld') {
         const output = jsonldSerializer.import(this.dataset.toStream())
 
         output.on('data', jsonld => {
           this.graphStr = jsonld
         })
-      } else {
+      }
+      else {
         this.graphStr = this.dataset.toString()
       }
     }
   },
-  data: function () {
+  data () {
     return {
       graphStr: '',
       dataset: {}
     }
   },
   methods: {
-    update: async function () {
-      if (!this.jsonLd) return
+    async update () {
+      if (!this.jsonLd) {
+        return
+      }
 
       const jsonLd = {
         '@context': this.context,
@@ -80,12 +83,14 @@ export default Vue.component('graph', {
           this.dataset = graph
         })
     }
-  },
-  template: `
-    <form v-if="graphStr">
-      <div class="form-group">
-        <textarea class="form-control" rows="20"><textarea readonly>{{ graphStr }}</textarea></textarea>
-      </div>
-    </form>
-  `
-})
+  }
+}
+</script>
+
+<template>
+  <form v-if="graphStr">
+    <div class="form-group">
+      <textarea class="form-control" rows="20" readonly :value="graphStr"></textarea>
+    </div>
+  </form>
+</template>
