@@ -2,7 +2,7 @@ import store from '../store'
 import JobSelector from '../components/JobSelector.js'
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.js'
-import PipelineSelector from '../components/PipelineSelector.js'
+import PipelineSelector from '../components/PipelineSelector.vue'
 
 export default Vue.component('overview-page', {
   components: {

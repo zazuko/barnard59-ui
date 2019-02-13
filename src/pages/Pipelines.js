@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.js'
 import Navigation from '../components/Navigation.js'
-import PipelineSelector from '../components/PipelineSelector.js'
+import PipelineSelector from '../components/PipelineSelector.vue'
 import store from '../store'
 
 export default Vue.component('pipelines-page', {
