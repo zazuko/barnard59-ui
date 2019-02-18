@@ -36,8 +36,7 @@ export default {
         output.on('data', jsonld => {
           this.graphStr = jsonld
         })
-      }
-      else {
+      } else {
         this.graphStr = this.dataset.toString()
       }
     }
@@ -90,7 +89,11 @@ export default {
 <template>
   <form v-if="graphStr">
     <div class="form-group">
-      <textarea class="form-control" rows="20" readonly :value="graphStr"></textarea>
+      <textarea
+        class="form-control"
+        rows="20"
+        readonly
+        :value="graphStr"></textarea>
     </div>
   </form>
 </template>

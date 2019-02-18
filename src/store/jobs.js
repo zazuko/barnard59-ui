@@ -5,7 +5,7 @@ export default {
     items: new Map()
   },
   mutations: {
-    jobsFetched: function (state, jobs) {
+    jobsFetched (state, jobs) {
       state.items = jobs
     }
   },

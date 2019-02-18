@@ -5,7 +5,7 @@ export default {
     items: new Map()
   },
   mutations: {
-    pipelinesFetched: function (state, pipelines) {
+    pipelinesFetched (state, pipelines) {
       state.items = pipelines
     }
   },
