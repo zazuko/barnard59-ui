@@ -5,7 +5,7 @@ import JsonldParser from '@rdfjs/parser-jsonld'
 import clownface from 'clownface'
 import Readable from 'readable-stream'
 import ns from '../utils/namespaces.js'
-import * as mutations from './pipeline-mutations'
+import * as m from './pipeline-mutations'
 import * as actions from './pipeline-actions'
 
 const ntriplesSerializer = new NtriplesSerializer()
@@ -30,6 +30,34 @@ export const frame = {
     }
   },
   '@type': 'https://pipeline.described.at/Pipeline'
+}
+
+export const mutations = {
+  [m.PIPELINE_LOADED] (state, jsonLd) {
+    state.graph = jsonLd
+    state.resources = jsonLd['@graph']
+    state.instance = state.resources.find(res => res.id === state.iri)
+  },
+  [m.IRI_SET] (state, pipelineIri) {
+    state.iri = pipelineIri
+  },
+  [m.STEP_REMOVED] (state, index) {
+    state.instance.steps.stepList.splice(index, 1)
+  },
+  [m.STEP_ADDED] (state, { index, step }) {
+    state.instance.steps.stepList.splice(index, 0, step)
+  },
+  [m.STEP_SELECTED] (state, step) {
+    state.selectedStep = step
+  },
+  [m.STEP_UPDATED] (state, { index, step }) {
+    state.instance.steps.stepList.splice(index, 1, step)
+  },
+  [m.REPLACE_VARIABLES] (state, variables) {
+    state.instance.variables = variables.map(({ name, value }) => ({
+      variable: { '@type': 'Variable', name, value }
+    }))
+  }
 }
 
 export default {
@@ -60,33 +88,7 @@ export default {
       return state.instance.variables && state.instance.variables.map(v => v.variable)
     }
   },
-  mutations: {
-    [mutations.PIPELINE_LOADED] (state, jsonLd) {
-      state.graph = jsonLd
-      state.resources = jsonLd['@graph']
-      state.instance = state.resources.find(res => res.id === state.iri)
-    },
-    [mutations.IRI_SET] (state, pipelineIri) {
-      state.iri = pipelineIri
-    },
-    [mutations.STEP_REMOVED] (state, index) {
-      state.instance.steps.stepList.splice(index, 1)
-    },
-    [mutations.STEP_ADDED] (state, { index, step }) {
-      state.instance.steps.stepList.splice(index, 0, step)
-    },
-    [mutations.STEP_SELECTED] (state, step) {
-      state.selectedStep = step
-    },
-    [mutations.STEP_UPDATED] (state, { index, step }) {
-      state.instance.steps.stepList.splice(index, 1, step)
-    },
-    [mutations.REPLACE_VARIABLES] (state, variables) {
-      state.instance.variables = variables.map(({ name, value }) => ({
-        variable: { '@type': 'Variable', name, value }
-      }))
-    }
-  },
+  mutations,
   actions: {
     async [actions.load] ({ commit, rootState }, pipelineIri) {
       commit(mutations.IRI_SET, pipelineIri)
