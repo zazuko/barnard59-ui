@@ -1,4 +1,9 @@
-import { PIPELINE_LOADED, IRI_SET, STEP_SELECTED, STEP_ADDED, REPLACE_VARIABLES, STEP_REMOVED } from '../../src/store/pipeline-mutations'
+import {
+  PIPELINE_LOADED, IRI_SET,
+  STEP_SELECTED, STEP_ADDED,
+  REPLACE_VARIABLES, STEP_REMOVED,
+  STEP_UPDATED
+} from '../../src/store/pipeline-mutations'
 import { mutations } from '../../src/store/pipeline'
 import { expect } from 'chai'
 
@@ -187,6 +192,30 @@ describe('mutations', () => {
 
       // then
       expect(state.instance.steps.stepList).to.have.all.members([1, 3])
+    })
+  })
+
+  describe(STEP_UPDATED, () => {
+    const mutation = mutations[STEP_UPDATED]
+
+    it('replaces the step', () => {
+      // given
+      const state = {
+        instance: {
+          steps: {
+            stepList: ['old step']
+          }
+        }
+      }
+
+      // when
+      mutation(state, {
+        index: 0,
+        step: 'new step'
+      })
+
+      // then
+      expect(state.instance.steps.stepList[0]).to.equal('new step')
     })
   })
 })
