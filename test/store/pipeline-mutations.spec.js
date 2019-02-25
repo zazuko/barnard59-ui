@@ -1,4 +1,4 @@
-import { PIPELINE_LOADED } from '../../src/store/pipeline-mutations'
+import { PIPELINE_LOADED, IRI_SET } from '../../src/store/pipeline-mutations'
 import { mutations } from '../../src/store/pipeline'
 import { expect } from 'chai'
 
@@ -38,6 +38,22 @@ describe('mutations', () => {
 
       // then
       expect(state.instance.id).to.be.equal(state.iri)
+    })
+  })
+
+  describe(IRI_SET, () => {
+    const mutation = mutations[IRI_SET]
+    const iri = 'http://example.com/pipeline/1'
+
+    it('sets state property', () => {
+      // given
+      const state = {}
+
+      // when
+      mutation(state, iri)
+
+      // then
+      expect(state.iri).to.be.equal(iri)
     })
   })
 })
