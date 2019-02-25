@@ -1,4 +1,4 @@
-import { PIPELINE_LOADED, IRI_SET, STEP_SELECTED } from '../../src/store/pipeline-mutations'
+import { PIPELINE_LOADED, IRI_SET, STEP_SELECTED, STEP_ADDED, REPLACE_VARIABLES } from '../../src/store/pipeline-mutations'
 import { mutations } from '../../src/store/pipeline'
 import { expect } from 'chai'
 
@@ -71,7 +71,101 @@ describe('mutations', () => {
       mutation(state, step)
 
       // then
-      expect(state.step.id).to.be.equal('urn:test:id')
+      expect(state.selectedStep.id).to.be.equal('urn:test:id')
+    })
+  })
+
+  describe(STEP_ADDED, () => {
+    const mutation = mutations[STEP_ADDED]
+
+    it('adds step at index', () => {
+      // given
+      const state = {
+        instance: {
+          steps: {
+            stepList: [
+              'step 1',
+              'step 2',
+              'step 4'
+            ]
+          }
+        }
+      }
+
+      // when
+      mutation(state, {
+        index: 2,
+        step: 'step 3'
+      })
+
+      // then
+      expect(state.instance.steps.stepList[2]).to.be.equal('step 3')
+    })
+  })
+
+  describe(REPLACE_VARIABLES, () => {
+    const mutation = mutations[REPLACE_VARIABLES]
+
+    it("updates instance's variables", () => {
+      // given
+      const state = {
+        instance: {
+        }
+      }
+
+      // when
+      mutation(state, [
+        {
+          name: 'path',
+          value: './tmp'
+        }
+      ])
+
+      // then
+      expect(state.instance.variables.length).to.be.equal(1)
+      expect(state.instance.variables[0].variable).to.include({
+        name: 'path',
+        value: './tmp'
+      })
+    })
+
+    it('adds @type to variables', () => {
+      // given
+      const state = {
+        instance: {
+        }
+      }
+
+      // when
+      mutation(state, [
+        {
+          name: 'path',
+          value: './tmp'
+        }
+      ])
+
+      // then
+      expect(state.instance.variables[0].variable).to.include({
+        '@type': 'Variable'
+      })
+    })
+
+    it('ignores props other than name and value', () => {
+      // given
+      const state = {
+        instance: {
+        }
+      }
+
+      // when
+      mutation(state, [
+        {
+          foo: 'bar'
+        }
+      ])
+
+      // then
+      expect(state.instance.variables[0].variable).to.not.contain.key('foo')
     })
   })
 })
