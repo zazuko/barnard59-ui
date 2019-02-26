@@ -1,5 +1,8 @@
 import { expect, assert } from 'chai'
-import { load, save, addStep, deleteStep, selectStep, updateStep, addVariable } from '../../src/store/pipeline-action-types'
+import {
+  load, save, addStep, saveVariable,
+  deleteStep, selectStep, updateStep,
+  addVariable, deleteVariable } from '../../src/store/pipeline-action-types'
 import * as mutations from '../../src/store/pipeline-mutation-types'
 import actions from '../../src/store/pipeline-actions'
 import * as sinon from 'sinon'
@@ -284,6 +287,49 @@ describe('action', () => {
 
       // then
       expect(commit.firstCall.lastArg[0]).to.deep.equal({ name, value })
+    })
+  })
+
+  describe(deleteVariable, () => {
+    it('commits array with variable removed', () => {
+      // given
+      const one = {}
+      const two = {}
+      const three = {}
+      const getters = {
+        variables: [ one, two, three ]
+      }
+      const commit = sinon.spy()
+
+      // when
+      actions.deleteVariable({ commit, getters }, 1)
+
+      // then
+      assert(commit.calledWith(
+        mutations.REPLACE_VARIABLES,
+        [
+          one, three
+        ]
+      ))
+    })
+  })
+
+  describe(saveVariable, () => {
+    it('replaces the saved variable', () => {
+      // given
+      const commit = sinon.spy()
+      const getters = {
+        variables: [{ name: 'old', value: 'foo' }]
+      }
+
+      // when
+      actions.saveVariable({ commit, getters }, { index: 0, name: 'new', value: 'bar' })
+
+      // then
+      assert(commit.calledWith(
+        mutations.REPLACE_VARIABLES,
+        [ sinon.match({ name: 'new', value: 'bar' }) ]
+      ))
     })
   })
 })
