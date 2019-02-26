@@ -1,5 +1,5 @@
 import { expect, assert } from 'chai'
-import { load, save } from '../../src/store/pipeline-action-types'
+import { load, save, addStep } from '../../src/store/pipeline-action-types'
 import * as mutations from '../../src/store/pipeline-mutation-types'
 import actions from '../../src/store/pipeline-actions'
 import * as sinon from 'sinon'
@@ -87,6 +87,42 @@ describe('action', () => {
       expect(dispatch.firstCall.args).to.deep.equal([
         load, state.iri
       ])
+    })
+  })
+
+  describe(addStep, function () {
+    it('commits an empty step', () => {
+      // given
+      const commit = sinon.spy()
+      const getters = {}
+
+      // when
+      actions.addStep({ commit, getters }, 5)
+
+      // then
+      assert(commit.calledWith(
+        mutations.STEP_ADDED,
+        sinon.match({
+          index: 5,
+          step: sinon.match.has('id')
+            .and(sinon.match.has('code:implementedBy', sinon.match.object))
+            .and(sinon.match.has('code:arguments', sinon.match.array))
+        })
+      ))
+    })
+
+    it('selects the new step step', () => {
+      // given
+      const commit = sinon.spy()
+      const getters = {}
+
+      // when
+      actions.addStep({ commit, getters }, 5)
+
+      // then
+      assert(commit.calledWith(
+        mutations.STEP_SELECTED
+      ))
     })
   })
 })
