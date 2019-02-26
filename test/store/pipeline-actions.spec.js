@@ -1,5 +1,5 @@
 import { expect, assert } from 'chai'
-import { load, save, addStep, deleteStep } from '../../src/store/pipeline-action-types'
+import { load, save, addStep, deleteStep, selectStep } from '../../src/store/pipeline-action-types'
 import * as mutations from '../../src/store/pipeline-mutation-types'
 import actions from '../../src/store/pipeline-actions'
 import * as sinon from 'sinon'
@@ -154,6 +154,23 @@ describe('action', () => {
       assert(commit.calledWith(
         mutations.STEP_SELECTED,
         null
+      ))
+    })
+  })
+
+  describe(selectStep, () => {
+    it('commits the selection', () => {
+      // given
+      const commit = sinon.spy()
+      const step = {}
+
+      // when
+      actions.selectStep({ commit }, step)
+
+      // then
+      assert(commit.calledWith(
+        mutations.STEP_SELECTED,
+        step
       ))
     })
   })
