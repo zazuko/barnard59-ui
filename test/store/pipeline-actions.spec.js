@@ -1,5 +1,5 @@
 import { expect, assert } from 'chai'
-import { load, save, addStep, deleteStep, selectStep, updateStep } from '../../src/store/pipeline-action-types'
+import { load, save, addStep, deleteStep, selectStep, updateStep, addVariable } from '../../src/store/pipeline-action-types'
 import * as mutations from '../../src/store/pipeline-mutation-types'
 import actions from '../../src/store/pipeline-actions'
 import * as sinon from 'sinon'
@@ -243,6 +243,47 @@ describe('action', () => {
       assert(commit.neverCalledWith(
         mutations.STEP_UPDATED
       ))
+    })
+  })
+
+  describe(addVariable, () => {
+    it('appends the variable', () => {
+      // given
+      const name = 'foo'
+      const value = 'bar'
+      const commit = sinon.spy()
+      const getters = {
+        variables: [ {}, {} ]
+      }
+
+      // when
+      actions.addVariable({ commit, getters }, { name, value })
+
+      // then
+      assert(commit.calledWith(
+        mutations.REPLACE_VARIABLES,
+        [
+          sinon.match.object,
+          sinon.match.object,
+          sinon.match({ name, value })
+        ]
+      ))
+    })
+
+    it('ignores superfluous properties', () => {
+      // given
+      const name = 'foo'
+      const value = 'bar'
+      const commit = sinon.spy()
+      const getters = {
+        variables: [ ]
+      }
+
+      // when
+      actions.addVariable({ commit, getters }, { name, value, something: 'else' })
+
+      // then
+      expect(commit.firstCall.lastArg[0]).to.deep.equal({ name, value })
     })
   })
 })
