@@ -1,5 +1,5 @@
 import { expect, assert } from 'chai'
-import { load, save, addStep, deleteStep, selectStep } from '../../src/store/pipeline-action-types'
+import { load, save, addStep, deleteStep, selectStep, updateStep } from '../../src/store/pipeline-action-types'
 import * as mutations from '../../src/store/pipeline-mutation-types'
 import actions from '../../src/store/pipeline-actions'
 import * as sinon from 'sinon'
@@ -90,7 +90,7 @@ describe('action', () => {
     })
   })
 
-  describe(addStep, function () {
+  describe(addStep, () => {
     it('commits an empty step', () => {
       // given
       const commit = sinon.spy()
@@ -171,6 +171,77 @@ describe('action', () => {
       assert(commit.calledWith(
         mutations.STEP_SELECTED,
         step
+      ))
+    })
+  })
+
+  describe(updateStep, () => {
+    it('clears selection', () => {
+      // given
+      const commit = sinon.spy()
+      const getters = {
+        steps: []
+      }
+
+      // when
+      actions.updateStep({ commit, getters }, {})
+
+      // then
+      assert(commit.calledWith(
+        mutations.STEP_SELECTED,
+        null
+      ))
+    })
+
+    it('commits updated step', () => {
+      // given
+      const commit = sinon.spy()
+      const getters = {
+        steps: [{
+          id: 'step1'
+        }, {
+          id: 'step2'
+        }, {
+          id: 'step3'
+        }]
+      }
+      const step = {
+        id: 'step2'
+      }
+
+      // when
+      actions.updateStep({ commit, getters }, step)
+
+      // then
+      assert(commit.calledWith(
+        mutations.STEP_UPDATED,
+        sinon.match.has('index', 1)
+          .and(sinon.match.has('step', step))
+      ))
+    })
+
+    it('does not commit step if not found in state', () => {
+      // given
+      const commit = sinon.spy()
+      const getters = {
+        steps: [{
+          id: 'step1'
+        }, {
+          id: 'step2'
+        }, {
+          id: 'step3'
+        }]
+      }
+      const step = {
+        id: 'step4'
+      }
+
+      // when
+      actions.updateStep({ commit, getters }, step)
+
+      // then
+      assert(commit.neverCalledWith(
+        mutations.STEP_UPDATED
       ))
     })
   })
