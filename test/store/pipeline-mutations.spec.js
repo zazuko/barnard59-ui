@@ -3,7 +3,7 @@ import {
   STEP_SELECTED, STEP_ADDED,
   REPLACE_VARIABLES, STEP_REMOVED,
   STEP_UPDATED
-} from '../../src/store/pipeline-mutations'
+} from '../../src/store/pipeline-mutation-types'
 import { mutations } from '../../src/store/pipeline'
 import { expect } from 'chai'
 
