@@ -1,8 +1,7 @@
 {
-  "name": "barnard59-server",
+  "name": "barnard59-ui",
   "version": "0.0.0",
-  "description": "Linked Data pipelines",
-  "main": "index.js",
+  "description": "Linked Data pipelines User Interface",
   "scripts": {
     "build": "npm run lint; webpack",
     "build:prod": "npm run lint; webpack --env.NODE_ENV=production --optimize-minimize",
@@ -13,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/zazuko/barnard59-server.git"
+    "url": "git://github.com/zazuko/barnard59-ui.git"
   },
   "keywords": [],
   "author": "Thomas Bergwinkl <bergi@axolotlfarm.org> (https://www.bergnet.org/people/bergi/card#me)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zazuko/barnard59-server/issues"
+    "url": "https://github.com/zazuko/barnard59-ui/issues"
   },
-  "homepage": "https://github.com/zazuko/barnard59-server",
+  "homepage": "https://github.com/zazuko/barnard59-ui",
   "dependencies": {
     "@rdfjs/namespace": "^1.0.0",
     "@rdfjs/serializer-ntriples": "^1.0.1",
