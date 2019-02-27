@@ -1,7 +1,7 @@
 <script>
 import Button from 'bootstrap-vue/es/components/button/button'
 import { createNamespacedHelpers } from 'vuex'
-import { addStep, selectStep, deleteStep } from '../store/pipeline-actions'
+import { addStep, selectStep, deleteStep } from '../store/pipeline-action-types'
 
 const { mapGetters, mapActions } = createNamespacedHelpers('pipeline')
 

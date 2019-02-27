@@ -3,7 +3,7 @@ import Table from 'bootstrap-vue/es/components/table/table'
 import Button from 'bootstrap-vue/es/components/button/button'
 import Input from 'bootstrap-vue/es/components/form-input/form-input'
 import { createNamespacedHelpers } from 'vuex'
-import { addVariable, deleteVariable, saveVariable } from '../store/pipeline-actions'
+import { addVariable, deleteVariable, saveVariable } from '../store/pipeline-action-types'
 
 const { mapActions } = createNamespacedHelpers('pipeline')
 
