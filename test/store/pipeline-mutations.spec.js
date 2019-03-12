@@ -13,8 +13,14 @@ describe('mutations', () => {
 
     it('sets the @graph object into state', () => {
       // given
-      const state = {}
-      const graph = []
+      const state = {
+        iri: 'http://example.resource'
+      }
+      const graph = [
+        {
+          id: 'http://example.resource'
+        }
+      ]
 
       // when
       mutation(state, {
@@ -43,6 +49,26 @@ describe('mutations', () => {
 
       // then
       expect(state.instance.id).to.be.equal(state.iri)
+    })
+
+    it('ensures that instance is set with stepList', () => {
+      // given
+      const state = {
+        iri: 'http://example.resource'
+      }
+      const graph = [
+        {
+          id: 'http://example.resource'
+        }
+      ]
+
+      // when
+      mutation(state, {
+        '@graph': graph
+      })
+
+      // then
+      expect(state.instance.steps.stepList).to.be.an('array')
     })
   })
 
