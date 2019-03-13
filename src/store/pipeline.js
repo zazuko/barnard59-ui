@@ -91,7 +91,11 @@ export default {
       return []
     },
     variables: (state) => {
-      return state.instance.variables && state.instance.variables.map(v => v.variable)
+      if (state.instance.variables) {
+        return state.instance.variables.map(v => v.variable)
+      }
+
+      return []
     }
   },
   mutations,
