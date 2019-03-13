@@ -33,7 +33,7 @@ export const mutations = {
       state.instance.steps = {}
     }
 
-    if (!state.instance.stepList) {
+    if (!state.instance.steps.stepList) {
       state.instance.steps.stepList = []
     }
   },
