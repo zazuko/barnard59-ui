@@ -1,6 +1,5 @@
 <script>
-import Vue from 'vue/dist/vue.js'
-import Forms from 'bootstrap-vue/es/components/form'
+import Form from 'bootstrap-vue/es/components/form/form'
 import FormGroup from 'bootstrap-vue/es/components/form-group/form-group'
 import Select from 'bootstrap-vue/es/components/form-select/form-select'
 import ImplementedByPipeline from './Pipeline.vue'
@@ -8,7 +7,7 @@ import ImplementedByEcmascript from './EcmaScript.vue'
 import ImplementedByEcmascriptLiteral from './EcmaScriptLiteral.vue'
 import ImplementedByTemplateLiteral from './EcmaScriptTemplateLiteral.vue'
 
-Vue.use(Forms)
+// Vue.use(Forms)
 
 const types = [{
   label: 'ECMAScript',
@@ -45,6 +44,7 @@ export default {
     'operation'
   ],
   components: {
+    'b-form': Form,
     'b-select': Select,
     'b-form-group': FormGroup,
     ImplementedByEcmascript,
@@ -59,10 +59,19 @@ export default {
     }
   },
   created () {
+    if (!this.operation['code:implementedBy']) {
+      return
+    }
+
     const operationType = this.operation['code:implementedBy']['@type']
     const isLiteral = !!this.operation['code:implementedBy']['@value']
 
-    this.type = types.filter(type => type.value.term === operationType && type.value.literal === isLiteral)[0].value
+    const type = types.find(type => type.value.term === operationType && type.value.literal === isLiteral)
+
+    console.log(type)
+    if (type) {
+      this.type = type.value
+    }
   },
   computed: {
     implementation () {

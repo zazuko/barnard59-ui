@@ -28,6 +28,14 @@ export const mutations = {
     state.graph = jsonLd
     state.resources = jsonLd['@graph']
     state.instance = state.resources.find(res => res.id === state.iri)
+
+    if (!state.instance.steps) {
+      state.instance.steps = {}
+    }
+
+    if (!state.instance.stepList) {
+      state.instance.steps.stepList = []
+    }
   },
   [m.IRI_SET] (state, pipelineIri) {
     state.iri = pipelineIri
@@ -36,6 +44,13 @@ export const mutations = {
     state.instance.steps.stepList.splice(index, 1)
   },
   [m.STEP_ADDED] (state, { index, step }) {
+    if (!state.instance.steps) {
+      state.instance.steps = {}
+    }
+    if (!state.instance.steps.stepList) {
+      state.instance.steps.stepList = []
+    }
+
     state.instance.steps.stepList.splice(index, 0, step)
   },
   [m.STEP_SELECTED] (state, step) {
