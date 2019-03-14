@@ -29,7 +29,7 @@ describe('pipeline getter', () => {
     })
 
     it('returns empty array if instance does not have variables', () => {
-      // give
+      // given
       const state = {
         instance: {}
       }
@@ -40,6 +40,31 @@ describe('pipeline getter', () => {
       // then
       expect(variables).to.be.an('array')
       expect(variables.length).to.equal(0)
+    })
+
+    it('excludes variables which are not objects', () => {
+      // given
+      const state = {
+        instance: {
+          variables: [
+            {
+              variable: []
+            },
+            {
+              variable: 'foobar'
+            },
+            {
+              variable: {}
+            }
+          ]
+        }
+      }
+
+      // when
+      const variables = getters.variables(state)
+
+      // then
+      expect(variables.length).to.equal(1)
     })
   })
 })

@@ -92,7 +92,10 @@ export default {
     },
     variables: (state) => {
       if (state.instance.variables) {
-        return state.instance.variables.map(v => v.variable)
+        return state.instance.variables
+          .map(v => v.variable)
+          .filter(v => !Array.isArray(v))
+          .filter(v => v === Object(v))
       }
 
       return []
