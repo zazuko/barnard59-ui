@@ -64,7 +64,7 @@ export default {
         <b-form-input v-model="data.item.value"></b-form-input>
       </template>
       <template slot="actions" slot-scope="row">
-        <b-button @click.stop="save(row.index, row.item.name, row.item.value)">Save</b-button>
+        <b-button @click.stop="save({ index: row.index, name: row.item.name, value: row.item.value})">Save</b-button>
         <b-button @click.stop="deleteVariable(row.index)" variant="danger">Delete</b-button>
       </template>
 
