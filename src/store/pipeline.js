@@ -1,6 +1,7 @@
 import ns from '../utils/namespaces.js'
 import * as m from './pipeline-mutation-types'
 import actions from './pipeline-actions'
+import Vue from 'vue'
 
 export const frame = {
   '@context': {
@@ -60,9 +61,9 @@ export const mutations = {
     state.instance.steps.stepList.splice(index, 1, step)
   },
   [m.REPLACE_VARIABLES] (state, variables) {
-    state.instance.variables = variables.map(({ name, value }) => ({
+    Vue.set(state.instance, 'variables', variables.map(({ name, value }) => ({
       variable: { '@type': 'Variable', name, value }
-    }))
+    })))
   }
 }
 
