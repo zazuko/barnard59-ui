@@ -26,6 +26,7 @@ describe('<Variables>', () => {
     })
   })
 
+describe('<Variables>', () => {
   describe('items getter', () => {
     it('should return an item for each ', () => {
       // given
