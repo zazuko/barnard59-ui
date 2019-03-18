@@ -58,14 +58,14 @@ export default {
   <div>
     <b-table :items="items" :fields="fields" foot-clone>
       <template slot="name" slot-scope="data">
-        <b-form-input v-model="data.item.name"></b-form-input>
+        <b-form-input class="name" v-model="data.item.name"></b-form-input>
       </template>
       <template slot="value" slot-scope="data">
-        <b-form-input v-model="data.item.value"></b-form-input>
+        <b-form-input class="value" v-model="data.item.value"></b-form-input>
       </template>
       <template slot="actions" slot-scope="row">
-        <b-button @click.stop="save({ index: row.index, name: row.item.name, value: row.item.value})">Save</b-button>
-        <b-button @click.stop="deleteVariable(row.index)" variant="danger">Delete</b-button>
+        <b-button class="save" @click.stop="save({ index: row.index, name: row.item.name, value: row.item.value})">Save</b-button>
+        <b-button class="delete" @click.stop="deleteVariable(row.index)" variant="danger">Delete</b-button>
       </template>
 
       <template slot="FOOT_index">
