@@ -1,50 +1,17 @@
 import * as mutations from './pipeline-mutation-types'
-import rdf from 'rdf-ext'
-import { promises as jsonld } from 'jsonld'
-import NtriplesSerializer from '@rdfjs/serializer-ntriples'
-import JsonldParser from '@rdfjs/parser-jsonld'
-import clownface from 'clownface'
-import { frame } from './pipeline'
-import Readable from 'readable-stream'
 import * as actions from './pipeline-action-types'
 
-const ntriplesSerializer = new NtriplesSerializer()
-const jsonldParser = new JsonldParser()
-
 export default {
-  async [actions.load] ({ commit, rootState }, pipelineIri) {
+  async [actions.load] ({ commit, dispatch, rootState, rootGetters }, pipelineIri) {
     commit(mutations.IRI_SET, pipelineIri)
 
-    let cf = await rootState.client.fetch(pipelineIri)
-    const stream = ntriplesSerializer.import(cf.dataset.toStream())
+    await dispatch('loadResource', null, { root: true })
 
-    let triples = ''
-    stream.on('data', (data) => {
-      triples += data.toString()
-    })
-
-    await rdf.waitFor(stream)
-    const pipelineJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
-
-    commit(mutations.PIPELINE_LOADED, pipelineJson)
+    commit(mutations.PIPELINE_SELECTED, rootGetters.resources.find(res => res.id === pipelineIri))
   },
-  async [actions.save] ({ dispatch, state, rootState }) {
-    const input = new Readable({
-      read: () => {
-        input.push(JSON.stringify(state.graph))
-        input.push(null)
-      }
-    })
+  async [actions.save] ({ dispatch, state }) {
+    await dispatch('saveResource', null, { root: true })
 
-    const graph = rdf.dataset()
-    const jsonldStream = jsonldParser.import(input)
-
-    jsonldStream.on('data', (quad) => {
-      graph.add(quad)
-    })
-
-    await rdf.waitFor(jsonldStream)
-    await rootState.client.update(clownface(graph).node(state.iri))
     dispatch(actions.load, state.iri)
   },
   [actions.addStep] ({ commit, getters }, index) {

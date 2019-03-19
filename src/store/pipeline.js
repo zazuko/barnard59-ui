@@ -25,10 +25,8 @@ export const frame = {
 }
 
 export const mutations = {
-  [m.PIPELINE_LOADED] (state, jsonLd) {
-    state.graph = jsonLd
-    state.resources = jsonLd['@graph']
-    state.instance = state.resources.find(res => res.id === state.iri)
+  [m.PIPELINE_SELECTED] (state, pipeline) {
+    state.instance = pipeline
 
     if (!state.instance.steps) {
       state.instance.steps = {}
@@ -71,8 +69,6 @@ export default {
   namespaced: true,
   state: {
     iri: '',
-    graph: {},
-    resources: [],
     selectedStep: null,
     instance: {}
   },
