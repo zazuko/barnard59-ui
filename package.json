@@ -24,6 +24,7 @@
   "dependencies": {
     "@rdfjs/namespace": "^1.0.0",
     "@rdfjs/serializer-ntriples": "^1.0.1",
+    "barnard59-core": "git+https://github.com/zazuko/barnard59-core.git#master",
     "bootstrap-vue": "^2.0.0-rc.11",
     "clownface": "git+https://github.com/rdf-ext/clownface.git#develop",
     "jsonld": "^1.5.0",
