@@ -1,7 +1,5 @@
-import store from '../../src/store/pipeline'
+import getters from '../../src/store/pipeline/getters'
 import { expect } from 'chai'
-
-const { getters } = store
 
 describe('pipeline getter', () => {
   describe('variables', () => {
