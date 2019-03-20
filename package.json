@@ -24,6 +24,7 @@
   "dependencies": {
     "@rdfjs/namespace": "^1.0.0",
     "@rdfjs/serializer-ntriples": "^1.0.1",
+    "barnard59-core": "git+https://github.com/zazuko/barnard59-core.git#master",
     "bootstrap-vue": "^2.0.0-rc.11",
     "clownface": "git+https://github.com/rdf-ext/clownface.git#develop",
     "jsonld": "^1.5.0",
@@ -31,9 +32,9 @@
     "rdf-ext": "^1.1.2",
     "rdf-fetch": "^1.0.0",
     "vuex": "^3.1.0",
-    "readable-stream": "latest",
-    "@rdfjs/parser-jsonld": "latest",
-    "@rdfjs/serializer-jsonld": "latest"
+    "readable-stream": "^3.2.0",
+    "@rdfjs/parser-jsonld": "^1.1.1",
+    "@rdfjs/serializer-jsonld": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
