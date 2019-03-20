@@ -1,16 +1,39 @@
-import * as mutations from './pipeline-mutation-types'
-import * as actions from './pipeline-action-types'
+import ns from '../../utils/namespaces.js'
+import * as mutations from './mutation-types'
+import * as actions from './action-types'
+import * as rootActions from '../root/action-types'
+
+export const frame = {
+  '@context': {
+    'id': '@id',
+    '@vocab': ns.p('').value,
+    'code': ns.code('').value,
+    'code:arguments': {
+      '@container': '@list'
+    },
+    'stepList': {
+      '@container': '@list'
+    },
+    'code:link': {
+      '@type': '@id'
+    },
+    'variables': {
+      '@container': '@set'
+    }
+  },
+  '@type': 'https://pipeline.described.at/Pipeline'
+}
 
 export default {
-  async [actions.load] ({ commit, dispatch, rootState, rootGetters }, pipelineIri) {
+  async [actions.load] ({ commit, dispatch, rootGetters }, pipelineIri) {
     commit(mutations.IRI_SET, pipelineIri)
 
-    await dispatch('loadResource', null, { root: true })
+    await dispatch(rootActions.LOAD_RESOURCE, frame, { root: true })
 
     commit(mutations.PIPELINE_SELECTED, rootGetters.resources.find(res => res.id === pipelineIri))
   },
   async [actions.save] ({ dispatch, state }) {
-    await dispatch('saveResource', null, { root: true })
+    await dispatch(rootActions.SAVE_RESOURCE, null, { root: true })
 
     dispatch(actions.load, state.iri)
   },
