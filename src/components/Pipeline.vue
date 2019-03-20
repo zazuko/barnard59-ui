@@ -7,8 +7,8 @@ import Button from 'bootstrap-vue/es/components/button/button'
 import Tabs from 'bootstrap-vue/es/components/tabs/tabs'
 import Tab from 'bootstrap-vue/es/components/tabs/tab'
 import LdNavigator from 'ld-navigation/LdNavigator'
-import { createNamespacedHelpers } from 'vuex'
-import { frame } from '../store/pipeline'
+import { createNamespacedHelpers, mapState as mapRootState } from 'vuex'
+import { frame } from '../store/pipeline/actions'
 
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers('pipeline')
 
@@ -43,11 +43,13 @@ export default {
   computed: {
     ...mapState({
       steps: 'steps',
-      step: 'selectedStep',
-      pipeline: 'graph'
+      step: 'selectedStep'
     }),
     ...mapGetters({
       variables: 'variables'
+    }),
+    ...mapRootState({
+      pipeline: 'resourceGraph'
     })
   }
 }
