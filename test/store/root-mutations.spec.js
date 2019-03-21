@@ -1,4 +1,4 @@
-import { RESOURCE_LOADED } from '../../src/store/root/mutation-types'
+import { RESOURCE_LOADED, RESOURCE_ADDED } from '../../src/store/root/mutation-types'
 import mutations from '../../src/store/root/mutations'
 import { expect } from 'chai'
 
@@ -25,6 +25,26 @@ describe('root store', () => {
 
         // then
         expect(state.resourceGraph).to.be.ok
+      })
+    })
+
+    describe(RESOURCE_ADDED, () => {
+      const mutation = mutations[RESOURCE_ADDED]
+
+      it('appends resource to resource graph', () => {
+        // given
+        const state = {
+          resourceGraph: {
+            '@graph': []
+          }
+        }
+        const resource = {}
+
+        // when
+        mutation(state, resource)
+
+        // then
+        expect(state.resourceGraph['@graph']).to.contain(resource)
       })
     })
   })

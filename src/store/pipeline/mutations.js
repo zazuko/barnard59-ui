@@ -15,6 +15,13 @@ export default {
   },
   [m.IRI_SET] (state, pipelineIri) {
     state.iri = pipelineIri
+
+    const whereIsHash = pipelineIri.indexOf('#')
+    if (whereIsHash >= 0) {
+      state.baseIri = pipelineIri.slice(0, whereIsHash + 1)
+    } else {
+      state.baseIri = `${pipelineIri}#`
+    }
   },
   [m.STEP_REMOVED] (state, index) {
     state.instance.steps.stepList.splice(index, 1)

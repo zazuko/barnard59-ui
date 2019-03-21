@@ -42,5 +42,8 @@ export default {
 
     await rdf.waitFor(jsonldStream)
     await state.client.update(clownface(graph).node(getters.resourceIri()))
+  },
+  [actions.ADD_RESOURCE] ({ commit }, resource) {
+    commit(mutations.RESOURCE_ADDED, resource)
   }
 }

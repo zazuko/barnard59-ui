@@ -2,7 +2,7 @@ import { expect, assert } from 'chai'
 import {
   load, save, addStep, saveVariable,
   deleteStep, selectStep, updateStep,
-  addVariable, deleteVariable } from '../../src/store/pipeline/action-types'
+  addVariable, deleteVariable, addPipeline } from '../../src/store/pipeline/action-types'
 import * as mutations from '../../src/store/pipeline/mutation-types'
 import actions from '../../src/store/pipeline/actions'
 import * as sinon from 'sinon'
@@ -331,6 +331,29 @@ describe('pipeline store', () => {
         assert(commit.calledWith(
           mutations.REPLACE_VARIABLES,
           [ sinon.match({ name: 'new', value: 'bar' }) ]
+        ))
+      })
+    })
+
+    describe(addPipeline, () => {
+      it('appends new resource to graph', () => {
+        // given
+        const dispatch = sinon.spy()
+        const state = {
+          baseIri: 'urn:pipeline:'
+        }
+
+        // when
+        actions.addPipeline({ state, dispatch }, { slug: 'new' })
+
+        // then
+        assert(dispatch.calledWith(
+          rootActions.ADD_RESOURCE,
+          sinon.match({
+            id: 'urn:pipeline:new',
+            '@type': 'Pipeline'
+          }),
+          sinon.match({ root: true })
         ))
       })
     })

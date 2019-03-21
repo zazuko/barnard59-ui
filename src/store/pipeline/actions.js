@@ -82,5 +82,13 @@ export default {
     variables.splice(index, 1)
 
     commit(mutations.REPLACE_VARIABLES, variables)
+  },
+  [actions.addPipeline] ({ state, dispatch }, { slug }) {
+    const newPipeline = {
+      '@type': 'Pipeline',
+      id: `${state.baseIri}${slug}`
+    }
+
+    dispatch(rootActions.ADD_RESOURCE, newPipeline, { root: true })
   }
 }

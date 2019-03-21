@@ -1,23 +1,35 @@
 <script>
 import Vue from 'vue/dist/vue.js'
+import Modal from 'bootstrap-vue/es/components/modal/index'
 import Nav from 'bootstrap-vue/es/components/navbar/index'
+import FormInput from 'bootstrap-vue/es/components/form-input/form-input'
 import Dropdown from 'bootstrap-vue/es/components/dropdown/index'
 import 'ld-navigation/ld-link'
 import { createNamespacedHelpers } from 'vuex'
 
 Vue.use(Nav)
 Vue.use(Dropdown)
+Vue.use(Modal)
 
-const { mapGetters, mapState } = createNamespacedHelpers('pipeline')
+const { mapGetters, mapState, mapActions } = createNamespacedHelpers('pipeline')
 
 export default {
+  components: {
+    'b-form-input': FormInput
+  },
   props: [
     'jobIri',
     'pipelineIri'
   ],
+  methods: {
+    ...mapActions([
+      'addPipeline'
+    ])
+  },
   computed: {
     ...mapState({
-      pipeline: 'instance'
+      pipeline: 'instance',
+      pipelineBaseIri: 'baseIri'
     }),
     ...mapGetters({
       pipelines: 'pipelines'
@@ -30,13 +42,13 @@ export default {
       return this.pipelineIri.slice(new URL(this.pipelineIri).origin.length, this.pipelineIri.indexOf('#'))
     },
     pipelineLabel () {
-      return (pipelineId) => pipelineId && pipelineId.slice(pipelineId.indexOf('#'))
+      return (pipelineId) => pipelineId && pipelineId.slice(this.pipelineBaseIri.length - 1)
     }
   },
   data () {
     return {
       jobsBaseUrl: '/job/',
-      pipelinesBaseUrl: '/pipeline/'
+      slug: ''
     }
   }
 }
@@ -60,16 +72,20 @@ export default {
           <a class="nav-link">{{ pipelineRootLabel }}</a>
         </ld-link>
         <a class="nav-link">{{ pipelineLabel(pipeline.id) }}</a>
-        <b-dropdown variant="link" >
+        <b-dropdown variant="link">
           <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="p.id === pipeline.id">
             {{ pipelineLabel(p.id) }}
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item>
+          <b-dropdown-item v-b-modal.newPipeline>
             New pipeline
           </b-dropdown-item>
         </b-dropdown>
       </b-navbar-nav>
     </b-collapse>
+
+    <b-modal id="newPipeline" @ok="addPipeline({ slug })" title="New pipeline">
+      <b-form-input label="URI slug" v-model="slug"></b-form-input>
+    </b-modal>
   </b-navbar>
 </template>

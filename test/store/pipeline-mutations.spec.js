@@ -47,17 +47,41 @@ describe('pipeline store', () => {
 
     describe(IRI_SET, () => {
       const mutation = mutations[IRI_SET]
-      const iri = 'http://example.com/pipeline/1'
 
       it('sets state property', () => {
         // given
         const state = {}
+        const iri = 'http://example.com/pipeline/1'
 
         // when
         mutation(state, iri)
 
         // then
         expect(state.iri).to.be.equal(iri)
+      })
+
+      it('sets correct base URL when it has a hash fragment', () => {
+        // given
+        const state = {}
+        const hashIri = 'http://example.com/pipeline#a'
+
+        // when
+        mutation(state, hashIri)
+
+        // then
+        expect(state.baseIri).to.be.equal('http://example.com/pipeline#')
+      })
+
+      it('sets correct base URL when it does not have a hash fragment', () => {
+        // given
+        const state = {}
+        const hashIri = 'http://example.com/pipeline'
+
+        // when
+        mutation(state, hashIri)
+
+        // then
+        expect(state.baseIri).to.be.equal('http://example.com/pipeline#')
       })
     })
 
