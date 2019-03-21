@@ -4,7 +4,6 @@ import Nav from 'bootstrap-vue/es/components/navbar/index'
 import Dropdown from 'bootstrap-vue/es/components/dropdown/index'
 import 'ld-navigation/ld-link'
 import { createNamespacedHelpers } from 'vuex'
-import BDropdown from 'bootstrap-vue/src/components/dropdown/dropdown'
 
 Vue.use(Nav)
 Vue.use(Dropdown)
@@ -12,7 +11,6 @@ Vue.use(Dropdown)
 const { mapGetters, mapState } = createNamespacedHelpers('pipeline')
 
 export default {
-  components: {BDropdown},
   props: [
     'jobIri',
     'pipelineIri'
@@ -62,9 +60,8 @@ export default {
           <a class="nav-link">{{ pipelineRootLabel }}</a>
         </ld-link>
         <a class="nav-link">{{ pipelineLabel(pipeline.id) }}</a>
-        <b-dropdown variant="link" no-caret>
-          <template slot="button-content">♻️<span class="sr-only">Search</span></template>
-          <b-dropdown-item v-for="p in pipelines" :key="p.id">
+        <b-dropdown variant="link" >
+          <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="p.id === pipeline.id">
             {{ pipelineLabel(p.id) }}
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
@@ -76,9 +73,3 @@ export default {
     </b-collapse>
   </b-navbar>
 </template>
-
-<style>
-  .dropdown-toggle:hover {
-    text-decoration: none !important;
-  }
-</style>
