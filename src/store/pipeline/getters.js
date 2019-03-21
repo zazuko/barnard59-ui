@@ -1,9 +1,10 @@
 export default {
   baseUrl (state) {
-    if (state.iri.indexOf('#') !== -1) {
-      return `${state.iri.split('#')[0]}#`
+    const whereIsHash = state.iri.indexOf('#')
+    if (whereIsHash >= 0) {
+      return state.iri.slice(0, whereIsHash + 1)
     } else {
-      return state.iri.split('/').slice(0, -1).join('/')
+      return `${state.iri}#`
     }
   },
   steps: (state) => {

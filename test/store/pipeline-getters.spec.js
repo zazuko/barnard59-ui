@@ -89,4 +89,32 @@ describe('pipeline getter', () => {
       expect(pipelines.map(p => p.id)).to.contain('urn:pipeline:id')
     })
   })
+
+  describe('baseUrl', () => {
+    it('sets correct base URL when it has a hash fragment', () => {
+      // given
+      const state = {
+        iri: 'http://example.com/pipeline#a'
+      }
+
+      // when
+      const baseUrl = getters.baseUrl(state)
+
+      // then
+      expect(baseUrl).to.be.equal('http://example.com/pipeline#')
+    })
+
+    it('sets correct base URL when it does not have a hash fragment', () => {
+      // given
+      const state = {
+        iri: 'http://example.com/pipeline'
+      }
+
+      // when
+      const baseUrl = getters.baseUrl(state)
+
+      // then
+      expect(baseUrl).to.be.equal('http://example.com/pipeline#')
+    })
+  })
 })

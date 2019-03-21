@@ -25,16 +25,17 @@ export default {
   ],
   methods: {
     ...mapActions([
-      'addPipeline'
+      'addPipeline',
+      'select'
     ])
   },
   computed: {
     ...mapState({
-      pipeline: 'instance',
-      pipelineBaseIri: 'baseIri'
+      pipeline: 'instance'
     }),
     ...mapGetters({
-      pipelines: 'pipelines'
+      pipelines: 'pipelines',
+      pipelineBaseIri: 'baseUrl'
     }),
     pipelineRootLabel () {
       if (!this.pipelineIri) {
@@ -75,7 +76,7 @@ export default {
         </ld-link>
         <a class="nav-link">{{ pipelineLabel(pipeline.id) }}</a>
         <b-dropdown variant="link">
-          <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="p.id === pipeline.id">
+          <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="p.id === pipeline.id" @click="select(p.id)">
             {{ pipelineLabel(p.id) }}
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>

@@ -83,8 +83,8 @@ export default {
 
     commit(mutations.REPLACE_VARIABLES, variables)
   },
-  [actions.addPipeline] ({ state, dispatch }, { slug }) {
-    const id = `${state.baseIri}${slug}`
+  [actions.addPipeline] ({ dispatch, getters }, { slug }) {
+    const id = `${getters.baseUrl}${slug}`
     const newPipeline = {
       '@type': 'Pipeline',
       id

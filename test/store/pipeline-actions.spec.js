@@ -334,12 +334,12 @@ describe('pipeline store', () => {
       it('appends new resource to graph', () => {
         // given
         const dispatch = sinon.spy()
-        const state = {
-          baseIri: 'urn:pipeline:'
+        const getters = {
+          baseUrl: 'urn:pipeline:'
         }
 
         // when
-        actions.addPipeline({ state, dispatch }, { slug: 'new' })
+        actions.addPipeline({ getters, dispatch }, { slug: 'new' })
 
         // then
         assert(dispatch.calledWith(
@@ -355,12 +355,12 @@ describe('pipeline store', () => {
       it('selects the new pipeline', () => {
         // given
         const dispatch = sinon.spy()
-        const state = {
-          baseIri: 'urn:pipeline:'
+        const getters = {
+          baseUrl: 'urn:pipeline:'
         }
 
         // when
-        actions.addPipeline({ state, dispatch }, { slug: 'new' })
+        actions.addPipeline({ dispatch, getters }, { slug: 'new' })
 
         // then
         assert(dispatch.calledWith(select, 'urn:pipeline:new'))

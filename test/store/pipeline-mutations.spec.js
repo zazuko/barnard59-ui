@@ -59,30 +59,6 @@ describe('pipeline store', () => {
         // then
         expect(state.iri).to.be.equal(iri)
       })
-
-      it('sets correct base URL when it has a hash fragment', () => {
-        // given
-        const state = {}
-        const hashIri = 'http://example.com/pipeline#a'
-
-        // when
-        mutation(state, hashIri)
-
-        // then
-        expect(state.baseIri).to.be.equal('http://example.com/pipeline#')
-      })
-
-      it('sets correct base URL when it does not have a hash fragment', () => {
-        // given
-        const state = {}
-        const hashIri = 'http://example.com/pipeline'
-
-        // when
-        mutation(state, hashIri)
-
-        // then
-        expect(state.baseIri).to.be.equal('http://example.com/pipeline#')
-      })
     })
 
     describe(STEP_SELECTED, () => {
