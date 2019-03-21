@@ -17,7 +17,7 @@ export default {
 <template>
   <page-base>
     <template>
-      <navigation :pipeline-iri="$store.state.resourceIri"></navigation>
+      <navigation :pipeline-iri="$store.getters.resourceIri()"></navigation>
       <pipeline></pipeline>
     </template>
   </page-base>

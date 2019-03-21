@@ -1,5 +1,5 @@
 export default {
-  baseUrl: (state) => {
+  baseUrl (state) {
     if (state.iri.indexOf('#') !== -1) {
       return `${state.iri.split('#')[0]}#`
     } else {
@@ -13,7 +13,7 @@ export default {
 
     return []
   },
-  variables: (state) => {
+  variables (state) {
     if (state.instance.variables) {
       return state.instance.variables
         .map(v => v.variable)
@@ -22,5 +22,8 @@ export default {
     }
 
     return []
+  },
+  pipelines (state, getters, rootState, rootGetters) {
+    return rootGetters.resources.filter(r => r['@type'] === 'Pipeline')
   }
 }

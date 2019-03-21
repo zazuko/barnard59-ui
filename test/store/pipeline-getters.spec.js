@@ -65,4 +65,28 @@ describe('pipeline getter', () => {
       expect(variables.length).to.equal(1)
     })
   })
+
+  describe('pipelines', () => {
+    it('returns all resources of type pipeline', () => {
+      // given
+      const rootGetters = {
+        resources: [
+          {
+            id: 'urn:pipeline:id',
+            '@type': 'Pipeline'
+          },
+          {
+            id: 'not_pipeline'
+          }
+        ]
+      }
+
+      // when
+      const pipelines = getters.pipelines(null, null, null, rootGetters)
+
+      // then
+      expect(pipelines.length).to.equal(1)
+      expect(pipelines.map(p => p.id)).to.contain('urn:pipeline:id')
+    })
+  })
 })
