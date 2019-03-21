@@ -2,7 +2,8 @@ import { expect, assert } from 'chai'
 import {
   load, save, addStep, saveVariable,
   deleteStep, selectStep, updateStep,
-  addVariable, deleteVariable, addPipeline } from '../../src/store/pipeline/action-types'
+  addVariable, deleteVariable, addPipeline,
+  select } from '../../src/store/pipeline/action-types'
 import * as mutations from '../../src/store/pipeline/mutation-types'
 import actions from '../../src/store/pipeline/actions'
 import * as sinon from 'sinon'
@@ -28,23 +29,17 @@ describe('pipeline store', () => {
         expect(commit.firstCall.args[0]).to.equal(mutations.IRI_SET)
       })
 
-      it('commits the pipeline body to state', async () => {
+      it('selects the pipeline', async () => {
         // given
         const dispatch = sinon.spy()
         const commit = sinon.spy()
         const iri = 'urn:pipeline:1'
-        const rootGetters = {
-          resources: [{ id: iri }]
-        }
 
         // when
-        await actions.load({ commit, dispatch, rootGetters }, iri)
+        await actions.load({ commit, dispatch }, iri)
 
         // then
-        assert(commit.calledWith(
-          mutations.PIPELINE_SELECTED,
-          sinon.match({ id: iri })
-        ))
+        assert(dispatch.calledWith(select, iri))
       })
     })
 
@@ -354,6 +349,40 @@ describe('pipeline store', () => {
             '@type': 'Pipeline'
           }),
           sinon.match({ root: true })
+        ))
+      })
+
+      it('selects the new pipeline', () => {
+        // given
+        const dispatch = sinon.spy()
+        const state = {
+          baseIri: 'urn:pipeline:'
+        }
+
+        // when
+        actions.addPipeline({ state, dispatch }, { slug: 'new' })
+
+        // then
+        assert(dispatch.calledWith(select, 'urn:pipeline:new'))
+      })
+    })
+
+    describe(select, () => {
+      it('commits selected pipeline', () => {
+        // given
+        const commit = sinon.spy()
+        const iri = 'urn:test:pipeline'
+        const rootGetters = {
+          resources: [{ id: iri }]
+        }
+
+        // when
+        actions.select({ commit, rootGetters }, iri)
+
+        // then
+        assert(commit.calledWith(
+          mutations.PIPELINE_SELECTED,
+          sinon.match({ id: iri })
         ))
       })
     })

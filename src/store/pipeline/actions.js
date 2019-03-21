@@ -25,12 +25,12 @@ export const frame = {
 }
 
 export default {
-  async [actions.load] ({ commit, dispatch, rootGetters }, pipelineIri) {
+  async [actions.load] ({ commit, dispatch }, pipelineIri) {
     commit(mutations.IRI_SET, pipelineIri)
 
     await dispatch(rootActions.LOAD_RESOURCE, frame, { root: true })
 
-    commit(mutations.PIPELINE_SELECTED, rootGetters.resources.find(res => res.id === pipelineIri))
+    dispatch(actions.select, pipelineIri)
   },
   async [actions.save] ({ dispatch, state }) {
     await dispatch(rootActions.SAVE_RESOURCE, null, { root: true })
@@ -84,11 +84,16 @@ export default {
     commit(mutations.REPLACE_VARIABLES, variables)
   },
   [actions.addPipeline] ({ state, dispatch }, { slug }) {
+    const id = `${state.baseIri}${slug}`
     const newPipeline = {
       '@type': 'Pipeline',
-      id: `${state.baseIri}${slug}`
+      id
     }
 
     dispatch(rootActions.ADD_RESOURCE, newPipeline, { root: true })
+    dispatch(actions.select, id)
+  },
+  [actions.select] ({ commit, rootGetters }, pipelineIri) {
+    commit(mutations.PIPELINE_SELECTED, rootGetters.resources.find(res => res.id === pipelineIri))
   }
 }
