@@ -68,7 +68,6 @@ export default {
 
     const type = types.find(type => type.value.term === operationType && type.value.literal === isLiteral)
 
-    console.log(type)
     if (type) {
       this.type = type.value
     }
@@ -83,7 +82,11 @@ export default {
       const operationType = this.operation['code:implementedBy']['@type']
       const isLiteral = !!this.operation['code:implementedBy']['@value']
 
-      this.type = types.filter(type => type.value.term === operationType && type.value.literal === isLiteral)[0].value
+      const type = types.filter(type => type.value.term === operationType && type.value.literal === isLiteral)[0]
+
+      if (type) {
+        this.type = type.value
+      }
     },
     type () {
       if (this.type) {
