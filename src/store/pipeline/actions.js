@@ -87,7 +87,10 @@ export default {
     const id = `${getters.baseUrl}${slug}`
     const newPipeline = {
       '@type': 'Pipeline',
-      id
+      id,
+      steps: {
+        stepList: []
+      }
     }
 
     dispatch(rootActions.ADD_RESOURCE, newPipeline, { root: true })
