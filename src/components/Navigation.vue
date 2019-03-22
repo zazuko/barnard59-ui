@@ -8,6 +8,7 @@ import Form from 'bootstrap-vue/es/components/form/index'
 import Dropdown from 'bootstrap-vue/es/components/dropdown/index'
 import 'ld-navigation/ld-link'
 import { createNamespacedHelpers } from 'vuex'
+import { getLabel } from '../utils/uri-helpers'
 
 Vue.use(Nav)
 Vue.use(Dropdown)
@@ -45,7 +46,7 @@ export default {
       return this.pipelineIri.slice(new URL(this.pipelineIri).origin.length, this.pipelineIri.indexOf('#'))
     },
     pipelineLabel () {
-      return (pipelineId) => pipelineId && pipelineId.slice(this.pipelineBaseIri.length - 1)
+      return (pipelineId) => getLabel(this.pipelineBaseIri, pipelineId)
     }
   },
   data () {
