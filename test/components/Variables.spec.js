@@ -2,7 +2,7 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import Variables from '../../src/components/Variables'
 import { expect } from 'chai'
-import { saveVariable } from '../../src/store/pipeline-action-types'
+import { saveVariable } from '../../src/store/pipeline/action-types'
 
 const localVue = createLocalVue()
 

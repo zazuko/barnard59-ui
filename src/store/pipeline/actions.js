@@ -1,50 +1,40 @@
-import * as mutations from './pipeline-mutation-types'
-import rdf from 'rdf-ext'
-import { promises as jsonld } from 'jsonld'
-import NtriplesSerializer from '@rdfjs/serializer-ntriples'
-import JsonldParser from '@rdfjs/parser-jsonld'
-import clownface from 'clownface'
-import { frame } from './pipeline'
-import Readable from 'readable-stream'
-import * as actions from './pipeline-action-types'
+import ns from '../../utils/namespaces.js'
+import * as mutations from './mutation-types'
+import * as actions from './action-types'
+import * as rootActions from '../root/action-types'
 
-const ntriplesSerializer = new NtriplesSerializer()
-const jsonldParser = new JsonldParser()
+export const frame = {
+  '@context': {
+    'id': '@id',
+    '@vocab': ns.p('').value,
+    'code': ns.code('').value,
+    'code:arguments': {
+      '@container': '@list'
+    },
+    'stepList': {
+      '@container': '@list'
+    },
+    'code:link': {
+      '@type': '@id'
+    },
+    'variables': {
+      '@container': '@set'
+    }
+  },
+  '@type': 'https://pipeline.described.at/Pipeline'
+}
 
 export default {
-  async [actions.load] ({ commit, rootState }, pipelineIri) {
+  async [actions.load] ({ commit, dispatch }, pipelineIri) {
     commit(mutations.IRI_SET, pipelineIri)
 
-    let cf = await rootState.client.fetch(pipelineIri)
-    const stream = ntriplesSerializer.import(cf.dataset.toStream())
+    await dispatch(rootActions.LOAD_RESOURCE, frame, { root: true })
 
-    let triples = ''
-    stream.on('data', (data) => {
-      triples += data.toString()
-    })
-
-    await rdf.waitFor(stream)
-    const pipelineJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
-
-    commit(mutations.PIPELINE_LOADED, pipelineJson)
+    dispatch(actions.select, pipelineIri)
   },
-  async [actions.save] ({ dispatch, state, rootState }) {
-    const input = new Readable({
-      read: () => {
-        input.push(JSON.stringify(state.graph))
-        input.push(null)
-      }
-    })
+  async [actions.save] ({ dispatch, state }) {
+    await dispatch(rootActions.SAVE_RESOURCE, null, { root: true })
 
-    const graph = rdf.dataset()
-    const jsonldStream = jsonldParser.import(input)
-
-    jsonldStream.on('data', (quad) => {
-      graph.add(quad)
-    })
-
-    await rdf.waitFor(jsonldStream)
-    await rootState.client.update(clownface(graph).node(state.iri))
     dispatch(actions.load, state.iri)
   },
   [actions.addStep] ({ commit, getters }, index) {
@@ -92,5 +82,25 @@ export default {
     variables.splice(index, 1)
 
     commit(mutations.REPLACE_VARIABLES, variables)
+  },
+  [actions.addPipeline] ({ dispatch, getters }, { slug }) {
+    const id = `${getters.baseUrl}${slug}`
+    const newPipeline = {
+      '@type': 'Pipeline',
+      id,
+      steps: {
+        stepList: []
+      }
+    }
+
+    dispatch(rootActions.ADD_RESOURCE, newPipeline, { root: true })
+    dispatch(actions.select, id)
+  },
+  [actions.select] ({ commit, rootGetters }, pipelineIri) {
+    const pipeline = rootGetters.resources.find(res => res.id === pipelineIri)
+
+    if (pipeline) {
+      commit(mutations.PIPELINE_SELECTED, pipeline)
+    }
   }
 }

@@ -7,8 +7,8 @@ import Button from 'bootstrap-vue/es/components/button/button'
 import Tabs from 'bootstrap-vue/es/components/tabs/tabs'
 import Tab from 'bootstrap-vue/es/components/tabs/tab'
 import LdNavigator from 'ld-navigation/LdNavigator'
-import { createNamespacedHelpers } from 'vuex'
-import { frame } from '../store/pipeline'
+import { createNamespacedHelpers, mapState as mapRootState } from 'vuex'
+import { frame } from '../store/pipeline/actions'
 
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers('pipeline')
 
@@ -44,17 +44,20 @@ export default {
     ...mapState({
       steps: 'steps',
       step: 'selectedStep',
-      pipeline: 'graph'
+      pipeline: 'instance'
     }),
     ...mapGetters({
       variables: 'variables'
+    }),
+    ...mapRootState({
+      graph: 'resourceGraph'
     })
   }
 }
 </script>
 
 <template>
-  <div>
+  <div v-if="pipeline">
     <b-tabs>
       <b-tab title="Steps">
         <div class="row">
@@ -82,7 +85,7 @@ export default {
       <div class="col-lg-12">
         <graph
           ref="graph"
-          :json-ld="pipeline"
+          :json-ld="graph"
           :context="context"
           syntax="json-ld"></graph>
       </div>
