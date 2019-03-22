@@ -97,6 +97,10 @@ export default {
     dispatch(actions.select, id)
   },
   [actions.select] ({ commit, rootGetters }, pipelineIri) {
-    commit(mutations.PIPELINE_SELECTED, rootGetters.resources.find(res => res.id === pipelineIri))
+    const pipeline = rootGetters.resources.find(res => res.id === pipelineIri)
+
+    if (pipeline) {
+      commit(mutations.PIPELINE_SELECTED, pipeline)
+    }
   }
 }

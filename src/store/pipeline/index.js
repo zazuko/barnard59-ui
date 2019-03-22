@@ -7,7 +7,7 @@ export default {
   state: {
     iri: '',
     selectedStep: null,
-    instance: {}
+    instance: null
   },
   getters,
   mutations,
