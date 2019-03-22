@@ -8,14 +8,14 @@ export default {
     }
   },
   steps: (state) => {
-    if (state.instance.steps) {
+    if (state.instance && state.instance.steps) {
       return state.instance.steps.stepList
     }
 
     return []
   },
   variables (state) {
-    if (state.instance.variables) {
+    if (state.instance && state.instance.variables) {
       return state.instance.variables
         .map(v => v.variable)
         .filter(v => !Array.isArray(v))

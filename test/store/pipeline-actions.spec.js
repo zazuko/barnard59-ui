@@ -385,6 +385,21 @@ describe('pipeline store', () => {
           sinon.match({ id: iri })
         ))
       })
+
+      it('does nothing when pipeline is not found in graph', async () => {
+        // given
+        const commit = sinon.spy()
+        const iri = 'urn:test:pipeline'
+        const rootGetters = {
+          resources: []
+        }
+
+        // when
+        actions.select({ commit, rootGetters }, iri)
+
+        // then
+        assert(commit.notCalled)
+      })
     })
   })
 })

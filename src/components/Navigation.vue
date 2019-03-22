@@ -43,10 +43,17 @@ export default {
         return ''
       }
 
-      return this.pipelineIri.slice(new URL(this.pipelineIri).origin.length, this.pipelineIri.indexOf('#'))
+      const hashIndex = this.pipelineIri.indexOf('#')
+      return this.pipelineIri.slice(new URL(this.pipelineIri).origin.length, hashIndex === -1 ? undefined : hashIndex)
     },
     pipelineLabel () {
-      return (pipelineId) => getLabel(this.pipelineBaseIri, pipelineId)
+      return (pipelineId) => {
+        if (!pipelineId) {
+          return 'Select pipeline'
+        }
+
+        return getLabel(this.pipelineBaseIri, pipelineId)
+      }
     }
   },
   data () {
@@ -75,9 +82,8 @@ export default {
         <ld-link :resource-url="pipelineIri">
           <a class="nav-link">{{ pipelineRootLabel }}</a>
         </ld-link>
-        <a class="nav-link">{{ pipelineLabel(pipeline.id) }}</a>
-        <b-dropdown variant="link">
-          <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="p.id === pipeline.id" @click="select(p.id)">
+        <b-dropdown variant="link" :text="pipelineLabel(pipeline.id)">
+          <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="pipeline && p.id === pipeline.id" @click="select(p.id)">
             {{ pipelineLabel(p.id) }}
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>

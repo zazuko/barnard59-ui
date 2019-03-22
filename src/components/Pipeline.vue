@@ -43,20 +43,21 @@ export default {
   computed: {
     ...mapState({
       steps: 'steps',
-      step: 'selectedStep'
+      step: 'selectedStep',
+      pipeline: 'instance'
     }),
     ...mapGetters({
       variables: 'variables'
     }),
     ...mapRootState({
-      pipeline: 'resourceGraph'
+      graph: 'resourceGraph'
     })
   }
 }
 </script>
 
 <template>
-  <div>
+  <div v-if="pipeline">
     <b-tabs>
       <b-tab title="Steps">
         <div class="row">
@@ -84,7 +85,7 @@ export default {
       <div class="col-lg-12">
         <graph
           ref="graph"
-          :json-ld="pipeline"
+          :json-ld="graph"
           :context="context"
           syntax="json-ld"></graph>
       </div>

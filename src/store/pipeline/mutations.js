@@ -5,12 +5,14 @@ export default {
   [m.PIPELINE_SELECTED] (state, pipeline) {
     state.instance = pipeline
 
-    if (!state.instance.steps) {
-      state.instance.steps = {}
-    }
+    if (pipeline) {
+      if (!state.instance.steps) {
+        state.instance.steps = {}
+      }
 
-    if (!state.instance.steps.stepList) {
-      state.instance.steps.stepList = []
+      if (!state.instance.steps.stepList) {
+        state.instance.steps.stepList = []
+      }
     }
   },
   [m.IRI_SET] (state, pipelineIri) {
