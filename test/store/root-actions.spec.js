@@ -20,7 +20,7 @@ describe('root store', () => {
         }
         const getters = {
           resourceIri: () => 'urn:test:pipeline',
-          getDataset: () => rdf.dataset()
+          serializedGraph: () => rdf.dataset()
         }
         client.expects('update').once()
 

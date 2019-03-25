@@ -23,7 +23,7 @@ export default {
     commit(mutations.RESOURCE_LOADED, graphJson)
   },
   async [actions.SAVE_RESOURCE] ({ state, getters }) {
-    const graph = await getters.getDataset()
+    const graph = await getters.serializedGraph()
     await state.client.update(clownface(graph).node(getters.resourceIri()))
   },
   [actions.ADD_RESOURCE] ({ commit }, resource) {

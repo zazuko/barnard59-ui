@@ -17,7 +17,7 @@ export default {
   resourceIri () {
     return () => LdNavigator.resourceUrl
   },
-  getDataset (state) {
+  serializedGraph (state) {
     return async () => {
       const input = new Readable({
         read: () => {
@@ -39,7 +39,7 @@ export default {
   },
   datasetContains (state, getters) {
     return async (id) => {
-      const dataset = await getters.getDataset()
+      const dataset = await getters.serializedGraph()
 
       return clownface(dataset).node(rdf.namedNode(id)).out().values.length > 0
     }

@@ -78,6 +78,9 @@
     "transform": {
       ".*\\.vue$": "vue-jest",
       ".+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "ld-navigation/(.*)": "<rootDir>/test/mocks/ld-navigation/$1.js"
     }
   }
 }
