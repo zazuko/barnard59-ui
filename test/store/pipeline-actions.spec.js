@@ -91,13 +91,16 @@ describe('pipeline store', () => {
     })
 
     describe(addStep, () => {
-      it('commits an empty step', () => {
+      it('commits an empty step', async () => {
         // given
         const commit = sinon.spy()
         const getters = {}
+        const rootGetters = {
+          datasetContains: () => false
+        }
 
         // when
-        actions.addStep({ commit, getters }, 5)
+        await actions.addStep({ commit, getters, rootGetters }, 5)
 
         // then
         assert(commit.calledWith(
@@ -111,13 +114,16 @@ describe('pipeline store', () => {
         ))
       })
 
-      it('selects the new step step', () => {
+      it('selects the new step step', async () => {
         // given
         const commit = sinon.spy()
         const getters = {}
+        const rootGetters = {
+          datasetContains: () => false
+        }
 
         // when
-        actions.addStep({ commit, getters }, 5)
+        await actions.addStep({ commit, getters, rootGetters }, 5)
 
         // then
         assert(commit.calledWith(
@@ -331,15 +337,18 @@ describe('pipeline store', () => {
     })
 
     describe(addPipeline, () => {
-      it('appends new resource to graph', () => {
+      it('appends new resource to graph', async () => {
         // given
         const dispatch = sinon.spy()
         const getters = {
           baseUrl: 'urn:pipeline:'
         }
+        const rootGetters = {
+          datasetContains: () => false
+        }
 
         // when
-        actions.addPipeline({ getters, dispatch }, { slug: 'new' })
+        await actions.addPipeline({ getters, dispatch, rootGetters }, { slug: 'new' })
 
         // then
         assert(dispatch.calledWith(
@@ -352,18 +361,38 @@ describe('pipeline store', () => {
         ))
       })
 
-      it('selects the new pipeline', () => {
+      it('selects the new pipeline', async () => {
         // given
         const dispatch = sinon.spy()
         const getters = {
           baseUrl: 'urn:pipeline:'
         }
+        const rootGetters = {
+          datasetContains: () => false
+        }
 
         // when
-        actions.addPipeline({ dispatch, getters }, { slug: 'new' })
+        await actions.addPipeline({ dispatch, getters, rootGetters }, { slug: 'new' })
 
         // then
         assert(dispatch.calledWith(select, 'urn:pipeline:new'))
+      })
+
+      it(`does not dispatch add ${rootActions.ADD_RESOURCE} when URI already exists in dataset`, async () => {
+        // given
+        const dispatch = sinon.spy()
+        const getters = {
+          baseUrl: 'urn:pipeline:'
+        }
+        const rootGetters = {
+          datasetContains: () => true
+        }
+
+        // when
+        await actions.addPipeline({ dispatch, getters, rootGetters }, { slug: 'new' }).catch(() => {})
+
+        // then
+        assert(dispatch.neverCalledWith(rootActions.ADD_RESOURCE))
       })
     })
 

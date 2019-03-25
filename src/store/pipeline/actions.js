@@ -2,7 +2,6 @@ import ns from '../../utils/namespaces.js'
 import * as mutations from './mutation-types'
 import * as actions from './action-types'
 import * as rootActions from '../root/action-types'
-import VueOnToast from 'vue-on-toast'
 
 export const frame = {
   '@context': {

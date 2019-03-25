@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { SAVE_RESOURCE, ADD_RESOURCE } from '../../src/store/root/action-types'
-import { code } from '../../src/utils/namespaces'
+import rdf from 'rdf-ext'
 import * as sinon from 'sinon'
 import Client from '../../src/Client'
 import actions from '../../src/store/root/actions'
@@ -14,15 +14,11 @@ describe('root store', () => {
         const dispatch = sinon.spy()
         const client = sinon.mock(new Client())
         const state = {
-          client: client.object,
-          '@graph': {
-            'urn:test:pipeline': {
-              '@type': code.Pipeline
-            }
-          }
+          client: client.object
         }
         const getters = {
-          resourceIri: () => 'urn:test:pipeline'
+          resourceIri: () => 'urn:test:pipeline',
+          getDataset: () => rdf.dataset()
         }
         client.expects('update').once()
 
