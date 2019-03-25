@@ -114,6 +114,23 @@ describe('pipeline store', () => {
         ))
       })
 
+      it(`does not commit step ${mutations.STEP_ADDED} when URI already exists in dataset`, async () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {}
+        const rootGetters = {
+          datasetContains: () => true
+        }
+
+        // when
+        await actions.addStep({ commit, getters, rootGetters }, 5).catch(() => {})
+
+        // then
+        assert(commit.neverCalledWith(
+          mutations.STEP_ADDED
+        ))
+      })
+
       it('selects the new step step', async () => {
         // given
         const commit = sinon.spy()
