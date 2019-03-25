@@ -9,7 +9,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import LdNavigator from 'ld-navigation/LdNavigator'
 import * as config from './config'
+import Toasted from 'vue-toasted'
 
+Vue.use(Toasted)
 Vue.use(Router)
 LdNavigator.base = config.baseUrl
 

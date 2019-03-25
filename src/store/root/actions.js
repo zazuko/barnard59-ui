@@ -2,13 +2,10 @@ import rdf from 'rdf-ext'
 import { promises as jsonld } from 'jsonld'
 import clownface from 'clownface'
 import NtriplesSerializer from '@rdfjs/serializer-ntriples'
-import JsonldParser from '@rdfjs/parser-jsonld'
-import Readable from 'readable-stream'
 import * as mutations from './mutation-types'
 import * as actions from './action-types'
 
 const ntriplesSerializer = new NtriplesSerializer()
-const jsonldParser = new JsonldParser()
 
 export default {
   async [actions.LOAD_RESOURCE] ({ state, commit, getters }, frame) {
@@ -26,21 +23,7 @@ export default {
     commit(mutations.RESOURCE_LOADED, graphJson)
   },
   async [actions.SAVE_RESOURCE] ({ state, getters }) {
-    const input = new Readable({
-      read: () => {
-        input.push(JSON.stringify(state.resourceGraph))
-        input.push(null)
-      }
-    })
-
-    const graph = rdf.dataset()
-    const jsonldStream = jsonldParser.import(input)
-
-    jsonldStream.on('data', (quad) => {
-      graph.add(quad)
-    })
-
-    await rdf.waitFor(jsonldStream)
+    const graph = await getters.getDataset()
     await state.client.update(clownface(graph).node(getters.resourceIri()))
   },
   [actions.ADD_RESOURCE] ({ commit }, resource) {

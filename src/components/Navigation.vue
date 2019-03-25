@@ -9,6 +9,7 @@ import Dropdown from 'bootstrap-vue/es/components/dropdown/index'
 import 'ld-navigation/ld-link'
 import { createNamespacedHelpers } from 'vuex'
 import { getLabel } from '../utils/uri-helpers'
+import { addPipeline, select } from '../store/pipeline/action-types'
 
 Vue.use(Nav)
 Vue.use(Dropdown)
@@ -25,10 +26,17 @@ export default {
     'pipelineIri'
   ],
   methods: {
-    ...mapActions([
-      'addPipeline',
-      'select'
-    ])
+    ...mapActions({
+      realAdd: addPipeline,
+      select
+    }),
+    addPipeline (slug) {
+      if (slug) {
+        this.realAdd({ slug })
+          .then(() => this.$refs.newPipelineDD.hide())
+          .catch(e => this.$toasted.show(e.message).goAway(1000))
+      }
+    }
   },
   computed: {
     ...mapState({
@@ -82,17 +90,17 @@ export default {
         <ld-link :resource-url="pipelineIri">
           <a class="nav-link">{{ pipelineRootLabel }}</a>
         </ld-link>
-        <b-dropdown variant="link" :text="pipelineLabel(pipeline)">
+        <b-dropdown ref="newPipelineDD" variant="link" :text="pipelineLabel(pipeline)">
           <b-dropdown-item v-for="p in pipelines" :key="p.id" :active="pipeline && p.id === pipeline.id" @click="select(p.id)">
             {{ pipelineLabel(p) }}
           </b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
 
-          <b-dropdown-form>
+          <b-dropdown-form @submit.prevent="addPipeline(slug)">
             <b-form-group label="URI slug">
-              <b-form-input v-model="slug"></b-form-input>
+              <b-form-input required v-model="slug"></b-form-input>
             </b-form-group>
-            <b-button variant="primary" size="sm" @click="addPipeline({ slug })">Add pipeline</b-button>
+            <b-button type="submit" variant="primary" size="sm">Add pipeline</b-button>
           </b-dropdown-form>
         </b-dropdown>
       </b-navbar-nav>
