@@ -5,6 +5,11 @@ import FormInput from 'bootstrap-vue/es/components/form-input/form-input'
 import Button from 'bootstrap-vue/es/components/button/button'
 import Table from 'bootstrap-vue/es/components/table/table'
 import Select from 'bootstrap-vue/es/components/form-select/form-select'
+import { createNamespacedHelpers } from 'vuex'
+import Vue from 'vue'
+import BFormSelect from 'bootstrap-vue/src/components/form-select/form-select'
+
+const { mapGetters } = createNamespacedHelpers('pipeline')
 
 const types = {
   'p:variableName': {
@@ -15,6 +20,24 @@ const types = {
   },
   'code:EcmaScript': {
     text: 'EcmaScript'
+  },
+  'Pipeline': {
+    text: 'Pipeline',
+    resource: true
+  }
+}
+
+function mapArgument (arg) {
+  if (arg.id) {
+    return {
+      type: 'Pipeline',
+      value: arg.id
+    }
+  }
+
+  return {
+    type: arg['@type'],
+    value: arg['@value']
   }
 }
 
@@ -23,6 +46,7 @@ export default {
     'step'
   ],
   components: {
+    BFormSelect,
     'b-table': Table,
     'b-select': Select,
     'b-button': Button,
@@ -39,6 +63,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      pipelines: 'pipelines'
+    }),
     items () {
       if (!this.stepArguments) {
         return []
@@ -47,7 +74,13 @@ export default {
       return this.stepArguments.map((arg, index) => ({
         index: index + 1,
         ...arg,
-        _showDetails: this.editedFields.includes(index)
+        _showDetails: !!this.editedFields[index]
+      }))
+    },
+    pipelineOptions () {
+      return this.pipelines.map(p => ({
+        value: p.id,
+        text: p.id
       }))
     }
   },
@@ -63,38 +96,53 @@ export default {
   },
   methods: {
     saveArgument (evt, row) {
-      this.endEditing(
-        evt,
-        row.index,
-        row.item,
-        this.stepArguments[row.index])
+      let newArgument
+
+      if (this.editedFields[row.index].type === 'Pipeline') {
+        newArgument = {
+          id: this.editedFields[row.index].value
+        }
+      } else {
+        newArgument = {
+          '@value': this.editedFields[row.index].value,
+          '@type': this.editedFields[row.index].type
+        }
+      }
+
+      Vue.set(this.stepArguments, row.index, newArgument)
+
+      this.endEditing(evt, row.index)
     },
     revertArgument (evt, row) {
-      this.endEditing(
-        evt,
-        row.index,
-        this.stepArguments[row.index],
-        row.item)
+      this.endEditing(evt, row.index)
     },
     addArgument () {
       this.stepArguments.push({})
       this.editArgument(this.stepArguments.length - 1)
     },
     editArgument (index) {
-      if (!this.editedFields.includes(index)) {
-        this.editedFields.push(index)
+      if (!this.editedFields[index]) {
+        Vue.set(this.editedFields, index, mapArgument(this.items[index]))
       }
     },
-    endEditing (evt, index, from, to) {
-      to['@type'] = from['@type']
-      to['@value'] = from['@value']
+    endEditing (evt, index) {
       this.editedFields.splice(this.editedFields.indexOf(index), 1)
       evt.preventDefault()
     },
     removeArgument (index) {
       this.stepArguments.splice(index, 1)
-      // shift index of edited elements
-      this.editedFields = this.editedFields.map(e => e >= index ? e - 1 : e)
+      this.editedFields.splice(index, 1)
+    },
+    getLabel (argument) {
+      if (argument.id) {
+        return `<${argument.id}>`
+      }
+
+      if (argument['@value'] && argument['@type']) {
+        return `"${argument['@value']}"^^${argument['@type']}`
+      }
+
+      return ''
     }
   }
 }
@@ -104,7 +152,7 @@ export default {
   <div>
     <b-table :items="items" :fields="fields">
       <template slot="value" slot-scope="data">
-        "{{ data.item['@value'] }}"^^{{ data.item['@type'] }}
+        {{ getLabel(data.item) }}
       </template>
 
       <template slot="actions" slot-scope="row">
@@ -114,13 +162,18 @@ export default {
       <template slot="row-details" slot-scope="row">
         <b-form @submit.stop="saveArgument($event, row)">
           <b-form-group label="Type" label-for="type">
-            <b-select id="type" :options="types" v-model="row.item['@type']"></b-select>
+            <b-select id="type" :options="types" v-model="editedFields[row.index].type"></b-select>
           </b-form-group>
           <b-form-group label="Value" label-for="value">
-            <b-form-input id="value" v-model="row.item['@value']"></b-form-input>
+            <template v-if="editedFields[row.index].type === 'Pipeline'">
+              <b-form-select v-model="editedFields[row.index].value" :options="pipelineOptions"></b-form-select>
+            </template>
+            <template v-else>
+              <b-form-input id="value" v-model="editedFields[row.index].value"></b-form-input>
+            </template>
           </b-form-group>
           <b-button type="submit" variant="primary">Save</b-button>
-          <b-button @click="revertArgument($event, row)" variant="secondary">Revert</b-button>
+          <b-button @click="revertArgument($event, row)" variant="secondary">Cancel</b-button>
         </b-form>
       </template>
     </b-table>

@@ -14,6 +14,9 @@ export default {
     'context',
     'syntax'
   ],
+  created () {
+    this.update()
+  },
   watch: {
     context () {
       this.update()
