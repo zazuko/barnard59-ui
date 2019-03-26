@@ -34,7 +34,8 @@ export default {
   methods: {
     ...mapActions({
       load: 'load',
-      saveClicked: 'save'
+      save: 'save',
+      publish: 'publish'
     }),
     async update () {
       this.load(LdNavigator.resourceUrl)
@@ -77,7 +78,8 @@ export default {
 
     <div class="row">
       <div class="col-lg-3">
-        <b-button variant="primary" @click="saveClicked">save</b-button>
+        <b-button @click="save">save pipeline</b-button>
+        <b-button variant="primary" @click="publish">publish pipeline</b-button>
       </div>
     </div>
 

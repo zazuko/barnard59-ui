@@ -8,11 +8,9 @@ export default {
   [RESOURCE_ADDED] (state, resource) {
     state.resourceGraph['@graph'].push(resource)
   },
-  [SETTINGS] (state, { baseUrl, useLocalStorage }) {
+  [SETTINGS] (state, { baseUrl }) {
     localStorage.setItem('baseUrl', baseUrl)
-    localStorage.setItem('useLocalStorage', useLocalStorage)
 
     state.config.baseUrl = LdNavigator.base = baseUrl
-    state.config.useLocalStorage = useLocalStorage
   }
 }

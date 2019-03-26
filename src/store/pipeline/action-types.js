@@ -1,6 +1,7 @@
 export const load = 'load'
 export const select = 'select'
 export const save = 'save'
+export const publish = 'publish'
 export const selectStep = 'selectStep'
 export const updateStep = 'updateStep'
 export const deleteStep = 'deleteStep'

@@ -2,10 +2,8 @@ import clownface from 'clownface'
 import rdf from 'rdf-ext'
 import JsonldParser from '@rdfjs/parser-jsonld'
 import Readable from 'readable-stream'
-import JsonldSerializer from '@rdfjs/serializer-jsonld'
 
 const jsonldParser = new JsonldParser()
-const jsonldSerializer = new JsonldSerializer()
 
 export default class LocalStorageClient {
   constructor (baseUrl) {
@@ -37,24 +35,7 @@ export default class LocalStorageClient {
     return clownface(graph)
   }
 
-  update (node) {
-    const iri = node.value.slice(0, node.value.indexOf('#'))
-    const output = jsonldSerializer.import(node.dataset.toStream())
-
-    return new Promise(resolve => {
-      output.on('data', jsonld => {
-        localStorage.setItem(iri, JSON.stringify(jsonld))
-
-        resolve(node)
-      })
-    })
-  }
-
-  fetchJobs () {
-    return clownface(rdf.dataset())
-  }
-
-  fetchPipelines () {
-    return clownface(rdf.dataset())
+  save (graph) {
+    localStorage.setItem(graph['@context']['@base'], JSON.stringify(graph))
   }
 }

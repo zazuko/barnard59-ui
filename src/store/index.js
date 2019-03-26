@@ -16,8 +16,7 @@ export default new Vuex.Store({
   strict: true,
   state: {
     config: {
-      baseUrl: localStorage.getItem('baseUrl') || config.baseUrl,
-      useLocalStorage: localStorage.getItem('useLocalStorage') === 'true' || false
+      baseUrl: localStorage.getItem('baseUrl') || config.baseUrl
     },
     resourceGraph: null
   },
@@ -30,11 +29,10 @@ export default new Vuex.Store({
   actions,
   getters: {
     ...getters,
+    localStorage (state) {
+      return new LocalStorageClient(state.config.baseUrl)
+    },
     client (state) {
-      if (state.config.useLocalStorage) {
-        return new LocalStorageClient(state.config.baseUrl)
-      }
-
       return new Client(state.config.baseUrl)
     }
   }

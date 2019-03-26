@@ -3,8 +3,9 @@ import * as mutations from './mutation-types'
 import * as actions from './action-types'
 import * as rootActions from '../root/action-types'
 
-export const frame = {
+export const frame = (base) => ({
   '@context': {
+    '@base': base,
     'id': '@id',
     '@vocab': ns.p('').value,
     'code': ns.code('').value,
@@ -22,24 +23,30 @@ export const frame = {
     }
   },
   '@type': 'https://pipeline.described.at/Pipeline'
-}
+})
 
 export default {
-  async [actions.load] ({ commit, dispatch }, pipelineIri) {
-    commit(mutations.IRI_SET, pipelineIri)
+  async [actions.load] ({ state, commit, dispatch }, pipelineIri) {
+    const baseIri = pipelineIri.slice(0, pipelineIri.indexOf('#'))
+    commit(mutations.IRI_SET, pipelineIri.slice(baseIri.length))
 
-    await dispatch(rootActions.LOAD_RESOURCE, frame, { root: true })
+    await dispatch(rootActions.LOAD_RESOURCE, frame(baseIri), { root: true })
 
-    dispatch(actions.select, pipelineIri)
+    dispatch(actions.select, state.iri)
   },
-  async [actions.save] ({ dispatch, state }) {
+  async [actions.save] ({ dispatch, rootState }) {
     await dispatch(rootActions.SAVE_RESOURCE, null, { root: true })
 
-    dispatch(actions.load, state.iri)
+    dispatch(actions.load, `${rootState.resourceGraph['@context']['@base']}#`)
   },
-  async [actions.addStep] ({ commit, getters, rootGetters }, index) {
+  async [actions.publish] ({ dispatch, rootState }) {
+    await dispatch(rootActions.PUBLISH_RESOURCE, null, { root: true })
+
+    dispatch(actions.load, `${rootState.resourceGraph['@context']['@base']}#`)
+  },
+  async [actions.addStep] ({ commit, getters, rootGetters }, id) {
     const step = {
-      id: `${getters.baseUrl}${index}`,
+      id,
       'code:implementedBy': {},
       'code:arguments': []
     }
@@ -47,7 +54,7 @@ export default {
     if (await rootGetters.datasetContains(step.id)) {
       throw new Error('id is use')
     } else {
-      commit(mutations.STEP_ADDED, { index, step })
+      commit(mutations.STEP_ADDED, { id, step })
       commit(mutations.STEP_SELECTED, step)
     }
   },

@@ -2,15 +2,13 @@
 import Button from 'bootstrap-vue/es/components/button/button'
 import { createNamespacedHelpers } from 'vuex'
 import { addStep, selectStep, deleteStep } from '../store/pipeline/action-types'
-import { getLabel } from '../utils/uri-helpers'
 import BFormInput from 'bootstrap-vue/src/components/form-input/form-input'
 
 const { mapGetters, mapActions } = createNamespacedHelpers('pipeline')
 
 export default {
   computed: mapGetters({
-    steps: 'steps',
-    pipelineBaseIri: 'baseUrl'
+    steps: 'steps'
   }),
   components: {
     BFormInput,
@@ -22,7 +20,6 @@ export default {
       remove: deleteStep,
       select: selectStep
     }),
-    getLabel,
     add (name) {
       if (name) {
         this.addStep(name).catch(e => this.$toasted.show(e.message).goAway(1000))
@@ -55,7 +52,7 @@ export default {
     </thead>
 
     <tr v-for="(step, index) in steps" :key="step.id">
-      <td><a href="javascript:void(0)" @click="select(step)">{{ step.label || getLabel(pipelineBaseIri, step.id) }}</a></td>
+      <td><a href="javascript:void(0)" @click="select(step)">{{ step.label || step.id }}</a></td>
       <td>
         <b-button variant="danger" @click="remove(index)">-</b-button>
       </td>
