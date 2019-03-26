@@ -8,8 +8,8 @@ import * as actions from './action-types'
 const ntriplesSerializer = new NtriplesSerializer()
 
 export default {
-  async [actions.LOAD_RESOURCE] ({ state, commit, getters }, frame) {
-    let cf = await state.client.fetch(getters.resourceIri())
+  async [actions.LOAD_RESOURCE] ({ commit, getters }, frame) {
+    let cf = await getters.client.fetch(getters.resourceIri())
     const stream = ntriplesSerializer.import(cf.dataset.toStream())
 
     let triples = ''
@@ -22,11 +22,14 @@ export default {
 
     commit(mutations.RESOURCE_LOADED, graphJson)
   },
-  async [actions.SAVE_RESOURCE] ({ state, getters }) {
+  async [actions.SAVE_RESOURCE] ({ getters }) {
     const graph = await getters.serializedGraph()
-    await state.client.update(clownface(graph).node(getters.resourceIri()))
+    await getters.client.update(clownface(graph).node(getters.resourceIri()))
   },
   [actions.ADD_RESOURCE] ({ commit }, resource) {
     commit(mutations.RESOURCE_ADDED, resource)
+  },
+  async [actions.SAVE_SETTINGS] ({ commit }, settings) {
+    commit(mutations.SETTINGS, settings)
   }
 }
