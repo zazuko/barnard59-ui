@@ -1,4 +1,4 @@
-import { RESOURCE_LOADED, RESOURCE_ADDED, SETTINGS } from './mutation-types'
+import { RESOURCE_LOADED, RESOURCE_ADDED, SETTINGS, BASE_SET } from './mutation-types'
 import LdNavigator from 'ld-navigation/LdNavigator'
 
 export default {
@@ -12,5 +12,8 @@ export default {
     localStorage.setItem('baseUrl', baseUrl)
 
     state.config.baseUrl = LdNavigator.base = baseUrl
+  },
+  [BASE_SET] (state, resourceBase) {
+    state.resourceGraph['@context']['@base'] = resourceBase
   }
 }

@@ -27,9 +27,19 @@ export default {
 
     commit(mutations.RESOURCE_LOADED, graphJson)
   },
-  async [actions.PUBLISH_RESOURCE] ({ getters }) {
+  async [actions.PUBLISH_RESOURCE] ({ getters, state, commit }) {
+    let id
+
+    if (state.resourceGraph['@context']['@base'] === '') {
+      id = (await getters.client.createPipeline()).value
+      commit(mutations.BASE_SET, id)
+    } else {
+      id = getters.resourceIri()
+    }
+
     const graph = await getters.serializedGraph()
-    await getters.client.update(clownface(graph).node(getters.resourceIri()))
+
+    await getters.client.update(clownface(graph).node(id))
   },
   async [actions.SAVE_RESOURCE] ({ getters, state }, iri) {
     await getters.localStorage.save(iri, state.resourceGraph)

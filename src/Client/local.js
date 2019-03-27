@@ -6,4 +6,8 @@ export default class LocalStorageClient {
   save (iri, graph) {
     localStorage.setItem(iri, JSON.stringify(graph))
   }
+
+  delete (iri) {
+    localStorage.removeItem(iri)
+  }
 }

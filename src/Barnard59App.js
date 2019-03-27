@@ -35,6 +35,10 @@ const routes = [{
   path: '/pipeline/:id',
   name: 'pipeline',
   component: PipelinePage
+}, {
+  path: '/draft/pipeline/:id',
+  name: 'pipeline draft',
+  component: PipelinePage
 }]
 
 const router = new Router({
