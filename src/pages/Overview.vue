@@ -5,7 +5,7 @@ import Navigation from '../components/Navigation.vue'
 import PipelineSelector from '../components/PipelineSelector.vue'
 import PipelineForm from '../components/PipelineForm.vue'
 import PageBase from './PageBase.vue'
-import UiSettings from './UiSettings.vue'
+import UiSettings from '../components/UiSettings.vue'
 
 export default {
   components: {
