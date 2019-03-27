@@ -1,3 +1,4 @@
+import navigateTo from 'ld-navigation/fireNavigation'
 import ns from '../../utils/namespaces.js'
 import * as mutations from './mutation-types'
 import * as actions from './action-types'
@@ -26,6 +27,19 @@ export const frame = (base) => ({
 })
 
 export default {
+  async [actions.create] ({ commit, dispatch, state, rootState, rootGetters }, slug) {
+    commit(mutations.IRI_SET, `${rootState.config.baseUrl}/pipeline/${slug}`)
+
+    const graphJson = frame('')
+    delete graphJson['@type']
+    graphJson['@graph'] = [ ]
+
+    rootGetters.localStorage.save(`${rootState.config.baseUrl}/pipeline/${slug}`, graphJson)
+
+    navigateTo(`${rootState.config.baseUrl}/pipeline/${slug}#root`)
+    dispatch(actions.addPipeline, { slug: 'root' })
+    dispatch(actions.select, state.iri)
+  },
   async [actions.load] ({ state, commit, dispatch }, { pipelineIri, forceServer = false }) {
     if (pipelineIri.indexOf('#') < 0) {
       pipelineIri = pipelineIri + '#'
@@ -44,10 +58,10 @@ export default {
     // todo: should be dispatched directly on root store
     await dispatch(rootActions.SAVE_RESOURCE, state.baseIri, { root: true })
   },
-  async [actions.publish] ({ state, dispatch }) {
+  async [actions.publish] ({ rootGetters, dispatch }) {
     await dispatch(rootActions.PUBLISH_RESOURCE, null, { root: true })
 
-    dispatch(actions.load, { pipelineIri: state.baseIri })
+    dispatch(actions.load, { pipelineIri: rootGetters.resourceIri(), forceServer: true })
   },
   async [actions.addStep] ({ commit, getters, rootGetters }, id) {
     const step = {

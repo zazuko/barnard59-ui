@@ -50,7 +50,8 @@ export default {
       pipeline: 'instance'
     }),
     ...mapGetters({
-      variables: 'variables'
+      variables: 'variables',
+      isDraft: 'isDraft'
     }),
     ...mapRootState({
       graph: 'resourceGraph'
@@ -82,7 +83,7 @@ export default {
       <div class="col-lg-3">
         <b-button @click="save">save pipeline</b-button>
         <b-button variant="primary" @click="publish">publish pipeline</b-button>
-        <b-button variant="danger" @click="reload">reload from server</b-button>
+        <b-button v-if="!isDraft" variant="danger" @click="reload">reload from server</b-button>
       </div>
     </div>
 

@@ -2,6 +2,7 @@
 import BForm from 'bootstrap-vue/src/components/form/form'
 import BFormGroup from 'bootstrap-vue/src/components/form-group/form-group'
 import { createNamespacedHelpers } from 'vuex'
+import { create } from '../store/pipeline/action-types'
 
 const { mapActions } = createNamespacedHelpers('pipeline')
 
@@ -13,9 +14,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-
-    ])
+    ...mapActions({
+      createPipeline: create
+    })
   }
 }
 </script>

@@ -22,6 +22,7 @@ export default {
 
       await rdf.waitFor(stream)
       graphJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
+      getters.localStorage.save(iri, graphJson)
     }
 
     commit(mutations.RESOURCE_LOADED, graphJson)
