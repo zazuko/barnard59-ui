@@ -16,7 +16,8 @@ export default {
     }
   },
   [m.IRI_SET] (state, pipelineIri) {
-    state.iri = pipelineIri
+    state.baseIri = pipelineIri.slice(0, pipelineIri.indexOf('#'))
+    state.iri = pipelineIri.slice(state.baseIri.length)
   },
   [m.STEP_REMOVED] (state, index) {
     state.instance.steps.stepList.splice(index, 1)

@@ -1,12 +1,4 @@
 export default {
-  baseUrl (state) {
-    const whereIsHash = state.iri.indexOf('#')
-    if (whereIsHash >= 0) {
-      return state.iri.slice(0, whereIsHash + 1)
-    } else {
-      return `${state.iri}#`
-    }
-  },
   steps: (state) => {
     if (state.instance && state.instance.steps) {
       return state.instance.steps.stepList

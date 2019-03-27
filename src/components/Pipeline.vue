@@ -9,6 +9,7 @@ import Tab from 'bootstrap-vue/es/components/tabs/tab'
 import LdNavigator from 'ld-navigation/LdNavigator'
 import { createNamespacedHelpers, mapState as mapRootState } from 'vuex'
 import { frame } from '../store/pipeline/actions'
+import * as actions from '../store/pipeline/action-types'
 
 const { mapActions, mapGetters, mapState } = createNamespacedHelpers('pipeline')
 
@@ -33,12 +34,13 @@ export default {
   },
   methods: {
     ...mapActions({
-      load: 'load',
-      save: 'save',
-      publish: 'publish'
+      load: actions.load,
+      reload: actions.reload,
+      save: actions.save,
+      publish: actions.publish
     }),
     async update () {
-      this.load(LdNavigator.resourceUrl)
+      this.load({ pipelineIri: LdNavigator.resourceUrl })
     }
   },
   computed: {
@@ -80,6 +82,7 @@ export default {
       <div class="col-lg-3">
         <b-button @click="save">save pipeline</b-button>
         <b-button variant="primary" @click="publish">publish pipeline</b-button>
+        <b-button variant="danger" @click="reload">reload from server</b-button>
       </div>
     </div>
 

@@ -8,17 +8,21 @@ import * as actions from './action-types'
 const ntriplesSerializer = new NtriplesSerializer()
 
 export default {
-  async [actions.LOAD_RESOURCE] ({ commit, getters }, frame) {
-    let cf = await getters.client.fetch(getters.resourceIri())
-    const stream = ntriplesSerializer.import(cf.dataset.toStream())
+  async [actions.LOAD_RESOURCE] ({ commit, getters }, { iri, frame, forceServer }) {
+    let graphJson = getters.localStorage.load(iri)
 
-    let triples = ''
-    stream.on('data', (data) => {
-      triples += data.toString()
-    })
+    if (!graphJson || forceServer) {
+      let cf = await getters.client.fetch(getters.resourceIri())
+      const stream = ntriplesSerializer.import(cf.dataset.toStream())
 
-    await rdf.waitFor(stream)
-    const graphJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
+      let triples = ''
+      stream.on('data', (data) => {
+        triples += data.toString()
+      })
+
+      await rdf.waitFor(stream)
+      graphJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
+    }
 
     commit(mutations.RESOURCE_LOADED, graphJson)
   },
@@ -26,8 +30,8 @@ export default {
     const graph = await getters.serializedGraph()
     await getters.client.update(clownface(graph).node(getters.resourceIri()))
   },
-  async [actions.SAVE_RESOURCE] ({ getters, state }) {
-    await getters.localStorage.save(state.resourceGraph)
+  async [actions.SAVE_RESOURCE] ({ getters, state }, iri) {
+    await getters.localStorage.save(iri, state.resourceGraph)
   },
   [actions.ADD_RESOURCE] ({ commit }, resource) {
     commit(mutations.RESOURCE_ADDED, resource)

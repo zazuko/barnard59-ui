@@ -26,27 +26,32 @@ export const frame = (base) => ({
 })
 
 export default {
-  async [actions.load] ({ state, commit, dispatch }, pipelineIri) {
-    const baseIri = pipelineIri.slice(0, pipelineIri.indexOf('#'))
-    commit(mutations.IRI_SET, pipelineIri.slice(baseIri.length))
+  async [actions.load] ({ state, commit, dispatch }, { pipelineIri, forceServer = false }) {
+    if (pipelineIri.indexOf('#') < 0) {
+      pipelineIri = pipelineIri + '#'
+    }
 
-    await dispatch(rootActions.LOAD_RESOURCE, frame(baseIri), { root: true })
+    commit(mutations.IRI_SET, pipelineIri)
+
+    await dispatch(rootActions.LOAD_RESOURCE, { iri: state.baseIri, frame: frame(state.baseIri), forceServer }, { root: true })
 
     dispatch(actions.select, state.iri)
   },
-  async [actions.save] ({ dispatch, rootState }) {
-    await dispatch(rootActions.SAVE_RESOURCE, null, { root: true })
-
-    dispatch(actions.load, `${rootState.resourceGraph['@context']['@base']}#`)
+  [actions.reload] ({ state, dispatch }) {
+    dispatch(actions.load, { pipelineIri: state.baseIri, forceServer: true })
   },
-  async [actions.publish] ({ dispatch, rootState }) {
+  async [actions.save] ({ dispatch, state }) {
+    // todo: should be dispatched directly on root store
+    await dispatch(rootActions.SAVE_RESOURCE, state.baseIri, { root: true })
+  },
+  async [actions.publish] ({ state, dispatch }) {
     await dispatch(rootActions.PUBLISH_RESOURCE, null, { root: true })
 
-    dispatch(actions.load, `${rootState.resourceGraph['@context']['@base']}#`)
+    dispatch(actions.load, { pipelineIri: state.baseIri })
   },
   async [actions.addStep] ({ commit, getters, rootGetters }, id) {
     const step = {
-      id,
+      id: `#${id}`,
       'code:implementedBy': {},
       'code:arguments': []
     }
@@ -95,7 +100,7 @@ export default {
     commit(mutations.REPLACE_VARIABLES, variables)
   },
   async [actions.addPipeline] ({ dispatch, getters, rootGetters }, { slug }) {
-    const id = `${getters.baseUrl}${slug}`
+    const id = `#${slug}`
     const newPipeline = {
       '@type': 'Pipeline',
       id,

@@ -6,6 +6,7 @@ export default {
   namespaced: true,
   state: {
     iri: '',
+    baseIri: '',
     selectedStep: null,
     instance: null
   },
