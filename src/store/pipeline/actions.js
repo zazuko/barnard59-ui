@@ -55,9 +55,9 @@ export default {
   [actions.reload] ({ state, dispatch }) {
     dispatch(actions.load, { pipelineIri: state.baseIri, forceServer: true })
   },
-  async [actions.save] ({ dispatch, state }) {
+  [actions.save] ({ dispatch, state }) {
     // todo: should be dispatched directly on root store
-    await dispatch(rootActions.SAVE_RESOURCE, state.baseIri, { root: true })
+    dispatch(rootActions.SAVE_RESOURCE, state.baseIri, { root: true })
   },
   async [actions.publish] ({ state, rootState, rootGetters, dispatch }) {
     await dispatch(rootActions.PUBLISH_RESOURCE, null, { root: true })
@@ -65,7 +65,7 @@ export default {
     rootGetters.localStorage.delete(state.baseIri)
     navigateTo(`${rootState.resourceGraph['@context']['@base']}${state.iri}`)
   },
-  async [actions.addStep] ({ commit, getters, rootGetters }, id) {
+  async [actions.addStep] ({ commit, rootGetters }, id) {
     const step = {
       id: `#${id}`,
       'code:implementedBy': {},
@@ -75,7 +75,7 @@ export default {
     if (await rootGetters.datasetContains(step.id)) {
       throw new Error('id is use')
     } else {
-      commit(mutations.STEP_ADDED, { id, step })
+      commit(mutations.STEP_ADDED, { step })
       commit(mutations.STEP_SELECTED, step)
     }
   },
@@ -115,7 +115,7 @@ export default {
 
     commit(mutations.REPLACE_VARIABLES, variables)
   },
-  async [actions.addPipeline] ({ dispatch, getters, rootGetters }, { slug }) {
+  async [actions.addPipeline] ({ dispatch, rootGetters }, { slug }) {
     const id = `#${slug}`
     const newPipeline = {
       '@type': 'Pipeline',

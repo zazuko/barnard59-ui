@@ -41,8 +41,8 @@ export default {
 
     await getters.client.update(clownface(graph).node(id))
   },
-  async [actions.SAVE_RESOURCE] ({ getters, state }, iri) {
-    await getters.localStorage.save(iri, state.resourceGraph)
+  [actions.SAVE_RESOURCE] ({ getters, state }, iri) {
+    getters.localStorage.save(iri, state.resourceGraph)
   },
   [actions.ADD_RESOURCE] ({ commit }, resource) {
     commit(mutations.RESOURCE_ADDED, resource)

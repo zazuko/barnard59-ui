@@ -22,7 +22,7 @@ export default {
   [m.STEP_REMOVED] (state, index) {
     state.instance.steps.stepList.splice(index, 1)
   },
-  [m.STEP_ADDED] (state, { index, step }) {
+  [m.STEP_ADDED] (state, { step }) {
     if (!state.instance.steps) {
       state.instance.steps = {}
     }
@@ -30,7 +30,7 @@ export default {
       state.instance.steps.stepList = []
     }
 
-    state.instance.steps.stepList.splice(index, 0, step)
+    state.instance.steps.stepList.push(step)
   },
   [m.STEP_SELECTED] (state, step) {
     state.selectedStep = step
