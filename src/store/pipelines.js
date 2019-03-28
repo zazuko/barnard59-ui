@@ -10,8 +10,8 @@ export default {
     }
   },
   actions: {
-    async fetchPipelines ({ commit, rootState }) {
-      const resource = await rootState.client.fetchPipelines()
+    async fetchPipelines ({ commit, rootGetters }) {
+      const resource = await rootGetters.client.fetchPipelines()
 
       const pipelines = resource.out(ns.schema('hasPart')).toArray().reduce((pipelines, pipeline) => {
         return pipelines.set(pipeline.value, pipeline)

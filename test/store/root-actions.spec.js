@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { SAVE_RESOURCE, ADD_RESOURCE, LOAD_RESOURCE } from '../../src/store/root/action-types'
+import { SAVE_RESOURCE, ADD_RESOURCE, LOAD_RESOURCE, PUBLISH_RESOURCE } from '../../src/store/root/action-types'
 import rdf from 'rdf-ext'
 import * as sinon from 'sinon'
 import cf from 'clownface'
@@ -11,21 +11,47 @@ import * as mutations from '../../src/store/root/mutation-types'
 describe('root store', () => {
   describe('action', () => {
     describe(SAVE_RESOURCE, () => {
+      it('saves to local storage', () => {
+        // given
+        const iri = 'id'
+        const state = {
+          resourceGraph: {}
+        }
+        const getters = {
+          localStorage: {
+            save: sinon.spy()
+          }
+        }
+
+        // when
+        actions[SAVE_RESOURCE]({ state, getters }, iri)
+
+        // then
+        assert(getters.localStorage.save.calledWithExactly(iri, state.resourceGraph))
+      })
+    })
+
+    describe(PUBLISH_RESOURCE, () => {
       it('performs server request', async () => {
         // given
         const dispatch = sinon.spy()
         const client = sinon.mock(new Client())
         const state = {
-          client: client.object
+          resourceGraph: {
+            '@context': {
+              '@base': 'some base'
+            }
+          }
         }
         const getters = {
+          client: client.object,
           resourceIri: () => 'urn:test:pipeline',
           serializedGraph: () => rdf.dataset()
         }
         client.expects('update').once()
 
         // when
-        await actions[SAVE_RESOURCE]({ state, dispatch, getters })
+        await actions[PUBLISH_RESOURCE]({ state, dispatch, getters })
 
         // then
         client.verify()
@@ -53,25 +79,29 @@ describe('root store', () => {
       it('commits framed JSON-LD to state', async () => {
         // given
         const commit = sinon.spy()
-        const state = {
-          client: new Client()
-        }
+        const client = new Client()
         const frame = {}
-        sinon.stub(state.client, 'fetch').callsFake(() => cf(rdf.dataset()))
-        const frameSpy = sinon.spy(jsonld, 'frame')
+        sinon.stub(client, 'fetch').callsFake(() => cf(rdf.dataset()))
+        const frameMock = sinon.stub(jsonld, 'frame')
+        frameMock.callsFake(() => ({ '@graph': [] }))
         const getters = {
-          resourceIri: () => 'urn:test:id'
+          client,
+          resourceIri: () => 'urn:test:id',
+          localStorage: {
+            load: () => null,
+            save: () => null
+          }
         }
 
         // when
-        await actions[LOAD_RESOURCE]({ state, getters, commit }, frame)
+        await actions[LOAD_RESOURCE]({ getters, commit }, { frame })
 
         // then
         assert(commit.calledWith(
           mutations.RESOURCE_LOADED,
           sinon.match({ '@graph': [] })
         ))
-        assert(frameSpy.calledWith(
+        assert(frameMock.calledWith(
           sinon.match.any,
           frame
         ))

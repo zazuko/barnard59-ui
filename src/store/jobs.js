@@ -10,8 +10,8 @@ export default {
     }
   },
   actions: {
-    async fetchJobs ({ commit, rootState }) {
-      const resource = await rootState.client.fetchJobs()
+    async fetchJobs ({ commit, rootGetters }) {
+      const resource = await rootGetters.client.fetchJobs()
 
       const jobs = resource.out(ns.schema('hasPart')).toArray().reduce((jobs, job) => {
         return jobs.set(job.value, job)

@@ -3,7 +3,7 @@ import LdNavigator from 'ld-navigation/LdNavigator'
 import Container from 'bootstrap-vue/es/components/layout/container'
 
 import 'ld-navigation/ld-navigator'
-import * as config from '../config'
+import config from '../config'
 
 export default {
   components: {

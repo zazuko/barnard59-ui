@@ -8,25 +8,46 @@ import * as actions from './action-types'
 const ntriplesSerializer = new NtriplesSerializer()
 
 export default {
-  async [actions.LOAD_RESOURCE] ({ state, commit, getters }, frame) {
-    let cf = await state.client.fetch(getters.resourceIri())
-    const stream = ntriplesSerializer.import(cf.dataset.toStream())
+  async [actions.LOAD_RESOURCE] ({ commit, getters }, { iri, frame, forceServer }) {
+    let graphJson = getters.localStorage.load(iri)
 
-    let triples = ''
-    stream.on('data', (data) => {
-      triples += data.toString()
-    })
+    if (!graphJson || forceServer) {
+      let cf = await getters.client.fetch(getters.resourceIri())
+      const stream = ntriplesSerializer.import(cf.dataset.toStream())
 
-    await rdf.waitFor(stream)
-    const graphJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
+      let triples = ''
+      stream.on('data', (data) => {
+        triples += data.toString()
+      })
+
+      await rdf.waitFor(stream)
+      graphJson = await jsonld.frame(await jsonld.fromRDF(triples), frame)
+      getters.localStorage.save(iri, graphJson)
+    }
 
     commit(mutations.RESOURCE_LOADED, graphJson)
   },
-  async [actions.SAVE_RESOURCE] ({ state, getters }) {
+  async [actions.PUBLISH_RESOURCE] ({ getters, state, commit }) {
+    let id
+
+    if (state.resourceGraph['@context']['@base'] === '') {
+      id = (await getters.client.createPipeline()).value
+      commit(mutations.BASE_SET, id)
+    } else {
+      id = getters.resourceIri()
+    }
+
     const graph = await getters.serializedGraph()
-    await state.client.update(clownface(graph).node(getters.resourceIri()))
+
+    await getters.client.update(clownface(graph).node(id))
+  },
+  [actions.SAVE_RESOURCE] ({ getters, state }, iri) {
+    getters.localStorage.save(iri, state.resourceGraph)
   },
   [actions.ADD_RESOURCE] ({ commit }, resource) {
     commit(mutations.RESOURCE_ADDED, resource)
+  },
+  async [actions.SAVE_SETTINGS] ({ commit }, settings) {
+    commit(mutations.SETTINGS, settings)
   }
 }
