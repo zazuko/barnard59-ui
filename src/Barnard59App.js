@@ -8,10 +8,12 @@ import Vue from 'vue/dist/vue.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import LdNavigator from 'ld-navigation/LdNavigator'
-import * as config from './config'
+import config from './config'
+import Toasted from 'vue-toasted'
 
+Vue.use(Toasted)
 Vue.use(Router)
-LdNavigator.base = config.baseUrl
+LdNavigator.base = localStorage.getItem('baseUrl') || config.baseUrl
 
 const routes = [{
   path: '/',
@@ -32,6 +34,10 @@ const routes = [{
 }, {
   path: '/pipeline/:id',
   name: 'pipeline',
+  component: PipelinePage
+}, {
+  path: '/draft/pipeline/:id',
+  name: 'pipeline draft',
   component: PipelinePage
 }]
 

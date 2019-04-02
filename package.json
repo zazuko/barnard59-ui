@@ -23,6 +23,8 @@
   "homepage": "https://github.com/zazuko/barnard59-ui",
   "dependencies": {
     "@rdfjs/namespace": "^1.0.0",
+    "@rdfjs/parser-jsonld": "^1.1.1",
+    "@rdfjs/serializer-jsonld": "^1.2.0",
     "@rdfjs/serializer-ntriples": "^1.0.1",
     "barnard59-core": "git+https://github.com/zazuko/barnard59-core.git#master",
     "bootstrap-vue": "^2.0.0-rc.11",
@@ -31,10 +33,9 @@
     "ld-navigation": "^0.5.1",
     "rdf-ext": "^1.1.2",
     "rdf-fetch": "^1.0.0",
-    "vuex": "^3.1.0",
     "readable-stream": "^3.2.0",
-    "@rdfjs/parser-jsonld": "^1.1.1",
-    "@rdfjs/serializer-jsonld": "^1.2.0"
+    "vue-toasted": "^1.1.26",
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
@@ -77,6 +78,9 @@
     "transform": {
       ".*\\.vue$": "vue-jest",
       ".+\\.js$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "ld-navigation/(.*)": "<rootDir>/test/mocks/ld-navigation/$1.js"
     }
   }
 }

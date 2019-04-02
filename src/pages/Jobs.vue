@@ -17,7 +17,7 @@ export default {
 <template>
   <page-base>
     <navigation></navigation>
-    <h1>Job</h1>
+    <h2>Job</h2>
     <job-selector></job-selector>
   </page-base>
 </template>

@@ -48,16 +48,28 @@ describe('pipeline store', () => {
     describe(IRI_SET, () => {
       const mutation = mutations[IRI_SET]
 
-      it('sets state property', () => {
+      it('sets hash fragment as iri', () => {
         // given
         const state = {}
-        const iri = 'http://example.com/pipeline/1'
+        const iri = 'http://example.com/pipeline#1'
 
         // when
         mutation(state, iri)
 
         // then
-        expect(state.iri).to.be.equal(iri)
+        expect(state.iri).to.be.equal('#1')
+      })
+
+      it('sets base and path as baseIri', () => {
+        // given
+        const state = {}
+        const iri = 'http://example.com/pipeline#1'
+
+        // when
+        mutation(state, iri)
+
+        // then
+        expect(state.baseIri).to.be.equal('http://example.com/pipeline')
       })
     })
 
@@ -82,7 +94,7 @@ describe('pipeline store', () => {
     describe(STEP_ADDED, () => {
       const mutation = mutations[STEP_ADDED]
 
-      it('adds step at index', () => {
+      it('adds step at end', () => {
         // given
         const state = {
           instance: {
@@ -98,12 +110,11 @@ describe('pipeline store', () => {
 
         // when
         mutation(state, {
-          index: 2,
           step: 'step 3'
         })
 
         // then
-        expect(state.instance.steps.stepList[2]).to.be.equal('step 3')
+        expect(state.instance.steps.stepList[3]).to.be.equal('step 3')
       })
     })
 

@@ -1,11 +1,12 @@
-const config = require('./config')
 const clownface = require('clownface')
 const ns = require('barnard59-core/lib/namespaces')
 const rdf = require('rdf-ext')
 const realFetch = require('rdf-fetch')
 
 class Client {
-  constructor () {
+  constructor (baseUrl) {
+    this.baseUrl = baseUrl
+
     this.rdfFetch = function (iri, opts) {
       if (/^http/.test(iri) === false) {
         throw new Error(`${iri} is not an absolute URI`)
@@ -59,15 +60,15 @@ class Client {
   }
 
   createPipeline () {
-    return this.create(`${config.baseUrl}/pipeline/`, ns.p('Pipeline'))
+    return this.create(`${this.baseUrl}/pipeline/`, ns.p('Pipeline'))
   }
 
   fetchPipelines () {
-    return this.fetch(`${config.baseUrl}/pipeline/`)
+    return this.fetch(`${this.baseUrl}/pipeline/`)
   }
 
   createJob (pipelineIri) {
-    return this.create(`${config.baseUrl}/job/`, ns.code('Run')).then(jobIri => {
+    return this.create(`${this.baseUrl}/job/`, ns.code('Run')).then(jobIri => {
       return this.fetch(jobIri.value)
     }).then(job => {
       job.addOut(ns.p('operation'), code => {
@@ -81,7 +82,7 @@ class Client {
   }
 
   fetchJobs () {
-    return this.fetch(`${config.baseUrl}/job/`)
+    return this.fetch(`${this.baseUrl}/job/`)
   }
 }
 

@@ -1,10 +1,10 @@
 <script>
-import Client from '../Client.js'
 import Job from '../components/Job.vue'
 import Navigation from '../components/Navigation.vue'
 import PageBase from './PageBase.vue'
 import store from '../store'
 import LdNavigator from 'ld-navigation/LdNavigator'
+import { mapGetters } from 'vuex'
 
 export default {
   store,
@@ -13,15 +13,13 @@ export default {
     Navigation,
     PageBase
   },
-  data () {
-    return {
-      client: new Client()
-    }
-  },
   computed: {
     resourceIri () {
       return LdNavigator.resourceUrl
-    }
+    },
+    ...mapGetters({
+      client: 'client'
+    })
   }
 }
 </script>
