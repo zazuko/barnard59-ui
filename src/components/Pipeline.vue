@@ -3,6 +3,7 @@ import Graph from './Graph.vue'
 import Step from './Step.vue'
 import Steps from './Steps.vue'
 import Variables from './Variables.vue'
+import PipelineTypes from './PipelineTypes.vue'
 import Button from 'bootstrap-vue/es/components/button/button'
 import Tabs from 'bootstrap-vue/es/components/tabs/tabs'
 import Tab from 'bootstrap-vue/es/components/tabs/tab'
@@ -19,6 +20,7 @@ export default {
     Step,
     Steps,
     Variables,
+    PipelineTypes,
     'b-tabs': Tabs,
     'b-tab': Tab,
     'b-button': Button
@@ -76,6 +78,9 @@ export default {
       </b-tab>
       <b-tab title="Variables">
         <variables :variables="variables"></variables>
+      </b-tab>
+      <b-tab title="Configuration">
+        <pipeline-types></pipeline-types>
       </b-tab>
     </b-tabs>
 
