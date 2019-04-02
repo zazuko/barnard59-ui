@@ -17,7 +17,9 @@ export default {
     return []
   },
   pipelines (state, getters, rootState, rootGetters) {
-    return rootGetters.resources.filter(r => r['@type'] === 'Pipeline')
+    return rootGetters.resources.filter(r => {
+      return r['@type'] === 'Pipeline' || (Array.isArray(r['@type']) && r['@type'].includes('Pipeline'))
+    })
   },
   isDraft (state, getters, rootState) {
     return rootState.resourceGraph['@context']['@base'] === ''
