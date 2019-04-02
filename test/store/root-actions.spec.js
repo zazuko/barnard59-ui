@@ -138,7 +138,7 @@ describe('root store', () => {
         // then
         assert(commit.calledWith(
           mutations.RESOURCE_TYPE_ADDED,
-          'urn:test:id', 'Readable'
+          sinon.match({ id: 'urn:test:id', type: 'Readable' })
         ))
       })
 
@@ -214,7 +214,7 @@ describe('root store', () => {
         // then
         assert(commit.calledWith(
           mutations.RESOURCE_TYPE_REMOVED,
-          'urn:test:id', 'Pipeline'
+          sinon.match({ id: 'urn:test:id', type: 'Pipeline' })
         ))
       })
 

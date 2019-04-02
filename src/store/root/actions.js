@@ -60,7 +60,7 @@ export default {
     const typesArray = Array.isArray(resource['@type']) ? resource['@type'] : [ resource['@type'] ]
 
     if (typesArray.includes(typeAdd.type) === false) {
-      commit(mutations.RESOURCE_TYPE_ADDED, typeAdd.id, typeAdd.type)
+      commit(mutations.RESOURCE_TYPE_ADDED, { id: typeAdd.id, type: typeAdd.type })
     }
   },
   [actions.REMOVE_RESOURCE_TYPE] ({ commit, getters }, typeRemove) {
@@ -73,7 +73,7 @@ export default {
     const typesArray = Array.isArray(resource['@type']) ? resource['@type'] : [ resource['@type'] ]
 
     if (typesArray.includes(typeRemove.type)) {
-      commit(mutations.RESOURCE_TYPE_REMOVED, typeRemove.id, typeRemove.type)
+      commit(mutations.RESOURCE_TYPE_REMOVED, { id: typeRemove.id, type: typeRemove.type })
     }
   }
 }

@@ -65,7 +65,7 @@ describe('root store', () => {
         }
 
         // when
-        mutation(state, 'urn:test:id', 'ReadableObjectMode')
+        mutation(state, { id: 'urn:test:id', type: 'ReadableObjectMode' })
 
         // then
         expect(state.resourceGraph['@graph'][0]['@type']).to.contain('ReadableObjectMode')
@@ -86,7 +86,7 @@ describe('root store', () => {
         }
 
         // when
-        mutation(state, 'urn:test:id', 'ReadableObjectMode')
+        mutation(state, { id: 'urn:test:id', type: 'ReadableObjectMode' })
 
         // then
         expect(state.resourceGraph['@graph'][0]['@type']).to.contain('ReadableObjectMode')
@@ -112,7 +112,7 @@ describe('root store', () => {
         }
 
         // when
-        mutation(state, 'urn:test:id', 'Readable')
+        mutation(state, { id: 'urn:test:id', type: 'Readable' })
 
         // then
         expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(1)
@@ -133,7 +133,7 @@ describe('root store', () => {
         }
 
         // when
-        mutation(state, 'urn:test:id', 'Readable')
+        mutation(state, { id: 'urn:test:id', type: 'Readable' })
 
         // then
         expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(0)

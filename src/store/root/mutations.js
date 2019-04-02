@@ -23,7 +23,7 @@ export default {
   [BASE_SET] (state, resourceBase) {
     state.resourceGraph['@context']['@base'] = resourceBase
   },
-  [RESOURCE_TYPE_ADDED] (state, id, type) {
+  [RESOURCE_TYPE_ADDED] (state, { id, type }) {
     const resource = state.resourceGraph['@graph'].find(r => r.id === id)
 
     if (Array.isArray(resource['@type']) === false) {
@@ -32,7 +32,7 @@ export default {
 
     resource['@type'].push(type)
   },
-  [RESOURCE_TYPE_REMOVED] (state, id, type) {
+  [RESOURCE_TYPE_REMOVED] (state, { id, type }) {
     const resource = state.resourceGraph['@graph'].find(r => r.id === id)
 
     if (Array.isArray(resource['@type']) === false) {
