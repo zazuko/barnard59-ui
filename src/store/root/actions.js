@@ -49,5 +49,18 @@ export default {
   },
   async [actions.SAVE_SETTINGS] ({ commit }, settings) {
     commit(mutations.SETTINGS, settings)
+  },
+  [actions.ADD_RESOURCE_TYPE] ({ commit, getters }, typeAdd) {
+    const resource = getters.resources.find(res => res.id === typeAdd.id)
+
+    if (!resource) {
+      return
+    }
+
+    const typesArray = Array.isArray(resource['@type']) ? resource['@type'] : [ resource['@type'] ]
+
+    if (typesArray.includes(typeAdd.type) === false) {
+      commit(mutations.RESOURCE_TYPE_ADDED, typeAdd.id, typeAdd.type)
+    }
   }
 }

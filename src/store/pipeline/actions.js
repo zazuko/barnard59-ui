@@ -138,5 +138,13 @@ export default {
     if (pipeline) {
       commit(mutations.PIPELINE_SELECTED, pipeline)
     }
+  },
+  [actions.addPipelineType] ({ dispatch, state }, newType) {
+    const actionPayload = {
+      id: state.instance.id,
+      type: newType
+    }
+
+    dispatch(rootActions.ADD_RESOURCE_TYPE, actionPayload, { root: true })
   }
 }

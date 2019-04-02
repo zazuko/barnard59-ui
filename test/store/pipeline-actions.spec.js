@@ -3,7 +3,7 @@ import {
   load, save, addStep, saveVariable,
   deleteStep, selectStep, updateStep,
   addVariable, deleteVariable, addPipeline,
-  select, publish } from '../../src/store/pipeline/action-types'
+  select, publish, addPipelineType } from '../../src/store/pipeline/action-types'
 import * as mutations from '../../src/store/pipeline/mutation-types'
 import actions from '../../src/store/pipeline/actions'
 import * as sinon from 'sinon'
@@ -464,6 +464,31 @@ describe('pipeline store', () => {
 
         // then
         assert(commit.notCalled)
+      })
+    })
+
+    describe(addPipelineType, () => {
+      it('dispatches action on root store', () => {
+        // given
+        const dispatch = sinon.spy()
+        const state = {
+          instance: {
+            id: 'urn:test:pipeline'
+          }
+        }
+
+        // when
+        actions.addPipelineType({ dispatch, state }, 'https://pipeline.described.at/Readable')
+
+        // then
+        assert(dispatch.calledWith(
+          rootActions.ADD_RESOURCE_TYPE,
+          sinon.match({
+            id: 'urn:test:pipeline',
+            type: 'https://pipeline.described.at/Readable'
+          }),
+          sinon.match({ root: true })
+        ))
       })
     })
   })

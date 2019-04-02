@@ -1,4 +1,5 @@
 export const RESOURCE_LOADED = 'resource loaded'
 export const RESOURCE_ADDED = 'resource added'
+export const RESOURCE_TYPE_ADDED = 'resource @type added'
 export const SETTINGS = 'settings saved'
 export const BASE_SET = 'base set'

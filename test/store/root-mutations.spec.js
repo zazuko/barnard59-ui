@@ -1,4 +1,4 @@
-import { RESOURCE_LOADED, RESOURCE_ADDED } from '../../src/store/root/mutation-types'
+import { RESOURCE_LOADED, RESOURCE_ADDED, RESOURCE_TYPE_ADDED } from '../../src/store/root/mutation-types'
 import mutations from '../../src/store/root/mutations'
 import { expect } from 'chai'
 
@@ -45,6 +45,53 @@ describe('root store', () => {
 
         // then
         expect(state.resourceGraph['@graph']).to.contain(resource)
+      })
+    })
+
+    describe(RESOURCE_TYPE_ADDED, () => {
+      const mutation = mutations[RESOURCE_TYPE_ADDED]
+
+      it('appends to @type array', () => {
+        // given
+        const state = {
+          resourceGraph: {
+            '@graph': [
+              {
+                'id': 'urn:test:id',
+                '@type': [ 'Pipeline', 'Readable' ]
+              }
+            ]
+          }
+        }
+
+        // when
+        mutation(state, 'urn:test:id', 'ReadableObjectMode')
+
+        // then
+        expect(state.resourceGraph['@graph'][0]['@type']).to.contain('ReadableObjectMode')
+        expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(3)
+      })
+
+      it('changes single @type to array', () => {
+        // given
+        const state = {
+          resourceGraph: {
+            '@graph': [
+              {
+                'id': 'urn:test:id',
+                '@type': 'Pipeline'
+              }
+            ]
+          }
+        }
+
+        // when
+        mutation(state, 'urn:test:id', 'ReadableObjectMode')
+
+        // then
+        expect(state.resourceGraph['@graph'][0]['@type']).to.contain('ReadableObjectMode')
+        expect(state.resourceGraph['@graph'][0]['@type']).to.contain('Pipeline')
+        expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(2)
       })
     })
   })
