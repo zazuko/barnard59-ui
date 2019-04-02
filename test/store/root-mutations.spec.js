@@ -1,4 +1,4 @@
-import { RESOURCE_LOADED, RESOURCE_ADDED, RESOURCE_TYPE_ADDED } from '../../src/store/root/mutation-types'
+import { RESOURCE_LOADED, RESOURCE_ADDED, RESOURCE_TYPE_ADDED, RESOURCE_TYPE_REMOVED } from '../../src/store/root/mutation-types'
 import mutations from '../../src/store/root/mutations'
 import { expect } from 'chai'
 
@@ -92,6 +92,52 @@ describe('root store', () => {
         expect(state.resourceGraph['@graph'][0]['@type']).to.contain('ReadableObjectMode')
         expect(state.resourceGraph['@graph'][0]['@type']).to.contain('Pipeline')
         expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(2)
+      })
+    })
+
+    describe(RESOURCE_TYPE_REMOVED, () => {
+      const mutation = mutations[RESOURCE_TYPE_REMOVED]
+
+      it('remove @type from array', () => {
+        // given
+        const state = {
+          resourceGraph: {
+            '@graph': [
+              {
+                'id': 'urn:test:id',
+                '@type': [ 'Pipeline', 'Readable' ]
+              }
+            ]
+          }
+        }
+
+        // when
+        mutation(state, 'urn:test:id', 'Readable')
+
+        // then
+        expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(1)
+        expect(state.resourceGraph['@graph'][0]['@type']).to.not.contain('Readable')
+      })
+
+      it('replaces single @type with empty array', () => {
+        // given
+        const state = {
+          resourceGraph: {
+            '@graph': [
+              {
+                'id': 'urn:test:id',
+                '@type': 'Readable'
+              }
+            ]
+          }
+        }
+
+        // when
+        mutation(state, 'urn:test:id', 'Readable')
+
+        // then
+        expect(state.resourceGraph['@graph'][0]['@type'].length).to.equal(0)
+        expect(state.resourceGraph['@graph'][0]['@type']).to.be.an('array')
       })
     })
   })

@@ -146,5 +146,17 @@ export default {
     }
 
     dispatch(rootActions.ADD_RESOURCE_TYPE, actionPayload, { root: true })
+  },
+  [actions.removePipelineType] ({ dispatch, state }, removedType) {
+    if (removedType === 'Pipeline') {
+      return
+    }
+
+    const actionPayload = {
+      id: state.instance.id,
+      type: removedType
+    }
+
+    dispatch(rootActions.REMOVE_RESOURCE_TYPE, actionPayload, { root: true })
   }
 }

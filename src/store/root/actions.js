@@ -62,5 +62,18 @@ export default {
     if (typesArray.includes(typeAdd.type) === false) {
       commit(mutations.RESOURCE_TYPE_ADDED, typeAdd.id, typeAdd.type)
     }
+  },
+  [actions.REMOVE_RESOURCE_TYPE] ({ commit, getters }, typeRemove) {
+    const resource = getters.resources.find(res => res.id === typeRemove.id)
+
+    if (!resource) {
+      return
+    }
+
+    const typesArray = Array.isArray(resource['@type']) ? resource['@type'] : [ resource['@type'] ]
+
+    if (typesArray.includes(typeRemove.type)) {
+      commit(mutations.RESOURCE_TYPE_REMOVED, typeRemove.id, typeRemove.type)
+    }
   }
 }
