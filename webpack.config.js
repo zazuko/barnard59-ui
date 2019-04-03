@@ -3,6 +3,7 @@ const IS_DEV_SERVER = process.argv.find(arg => arg.includes('webpack-dev-server'
 const ENV = process.argv.find(arg => arg.includes('NODE_ENV=production')) ? 'production' : 'development'
 const OUTPUT_PATH = IS_DEV_SERVER ? resolve('.') : resolve('.build')
 const { VueLoaderPlugin } = require('vue-loader')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   mode: ENV,
@@ -24,7 +25,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new CopyWebpackPlugin(['public/index.html'])
   ],
   devServer: {
     contentBase: OUTPUT_PATH,
