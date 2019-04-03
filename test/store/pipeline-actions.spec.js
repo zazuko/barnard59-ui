@@ -133,6 +133,7 @@ describe('pipeline store', () => {
           mutations.STEP_ADDED,
           sinon.match({
             step: sinon.match.has('id', '#step name')
+              .and(sinon.match.has('@type', 'Step'))
               .and(sinon.match.has('code:implementedBy', sinon.match.object))
               .and(sinon.match.has('code:arguments', sinon.match.array))
           })

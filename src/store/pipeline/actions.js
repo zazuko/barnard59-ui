@@ -68,6 +68,7 @@ export default {
   async [actions.addStep] ({ commit, rootGetters }, id) {
     const step = {
       id: `#${id}`,
+      '@type': 'Step',
       'code:implementedBy': {},
       'code:arguments': []
     }
