@@ -49,5 +49,31 @@ export default {
   },
   async [actions.SAVE_SETTINGS] ({ commit }, settings) {
     commit(mutations.SETTINGS, settings)
+  },
+  [actions.ADD_RESOURCE_TYPE] ({ commit, getters }, typeAdd) {
+    const resource = getters.resources.find(res => res.id === typeAdd.id)
+
+    if (!resource) {
+      return
+    }
+
+    const typesArray = Array.isArray(resource['@type']) ? resource['@type'] : [ resource['@type'] ]
+
+    if (typesArray.includes(typeAdd.type) === false) {
+      commit(mutations.RESOURCE_TYPE_ADDED, { id: typeAdd.id, type: typeAdd.type })
+    }
+  },
+  [actions.REMOVE_RESOURCE_TYPE] ({ commit, getters }, typeRemove) {
+    const resource = getters.resources.find(res => res.id === typeRemove.id)
+
+    if (!resource) {
+      return
+    }
+
+    const typesArray = Array.isArray(resource['@type']) ? resource['@type'] : [ resource['@type'] ]
+
+    if (typesArray.includes(typeRemove.type)) {
+      commit(mutations.RESOURCE_TYPE_REMOVED, { id: typeRemove.id, type: typeRemove.type })
+    }
   }
 }

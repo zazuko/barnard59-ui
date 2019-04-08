@@ -1,5 +1,12 @@
 import { assert } from 'chai'
-import { SAVE_RESOURCE, ADD_RESOURCE, LOAD_RESOURCE, PUBLISH_RESOURCE } from '../../src/store/root/action-types'
+import {
+  SAVE_RESOURCE,
+  ADD_RESOURCE,
+  LOAD_RESOURCE,
+  PUBLISH_RESOURCE,
+  ADD_RESOURCE_TYPE,
+  REMOVE_RESOURCE_TYPE
+} from '../../src/store/root/action-types'
 import rdf from 'rdf-ext'
 import * as sinon from 'sinon'
 import cf from 'clownface'
@@ -109,6 +116,144 @@ describe('root store', () => {
 
       afterEach(() => {
         jsonld.frame.restore()
+      })
+    })
+
+    describe(ADD_RESOURCE_TYPE, () => {
+      it('commits mutation', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: [
+            {
+              id: 'urn:test:id',
+              '@type': 'Pipeline'
+            }
+          ]
+        }
+
+        // when
+        actions[ADD_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Readable' })
+
+        // then
+        assert(commit.calledWith(
+          mutations.RESOURCE_TYPE_ADDED,
+          sinon.match({ id: 'urn:test:id', type: 'Readable' })
+        ))
+      })
+
+      it('does not commit mutation if type already present', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: [
+            {
+              id: 'urn:test:id',
+              '@type': 'Pipeline'
+            }
+          ]
+        }
+
+        // when
+        actions[ADD_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Pipeline' })
+
+        // then
+        assert(commit.notCalled)
+      })
+
+      it('does not commit mutation if type already present in array', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: [
+            {
+              id: 'urn:test:id',
+              '@type': ['Pipeline', 'Readable']
+            }
+          ]
+        }
+
+        // when
+        actions[ADD_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Pipeline' })
+
+        // then
+        assert(commit.notCalled)
+      })
+
+      it('does not commit mutation if resource is not found', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: []
+        }
+
+        // when
+        actions[ADD_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Pipeline' })
+
+        // then
+        assert(commit.notCalled)
+      })
+    })
+
+    describe(ADD_RESOURCE_TYPE, () => {
+      it('commits mutation', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: [
+            {
+              id: 'urn:test:id',
+              '@type': 'Pipeline'
+            }
+          ]
+        }
+
+        // when
+        actions[REMOVE_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Pipeline' })
+
+        // then
+        assert(commit.calledWith(
+          mutations.RESOURCE_TYPE_REMOVED,
+          sinon.match({ id: 'urn:test:id', type: 'Pipeline' })
+        ))
+      })
+
+      it('does not commit mutation if resource does not have the give type', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: [
+            {
+              id: 'urn:test:id',
+              '@type': 'Pipeline'
+            }
+          ]
+        }
+
+        // when
+        actions[REMOVE_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Readable' })
+
+        // then
+        assert(commit.notCalled)
+      })
+
+      it('does not commit mutation if resource is not found', () => {
+        // given
+        const commit = sinon.spy()
+        const getters = {
+          resources: [
+            {
+              id: 'urn:test:other',
+              '@type': 'Pipeline'
+            }
+          ]
+        }
+
+        // when
+        actions[REMOVE_RESOURCE_TYPE]({ getters, commit }, { id: 'urn:test:id', type: 'Pipeline' })
+
+        // then
+        assert(commit.notCalled)
       })
     })
   })

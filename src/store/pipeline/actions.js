@@ -68,6 +68,7 @@ export default {
   async [actions.addStep] ({ commit, rootGetters }, id) {
     const step = {
       id: `#${id}`,
+      '@type': 'Step',
       'code:implementedBy': {},
       'code:arguments': []
     }
@@ -138,5 +139,25 @@ export default {
     if (pipeline) {
       commit(mutations.PIPELINE_SELECTED, pipeline)
     }
+  },
+  [actions.addPipelineType] ({ dispatch, state }, newType) {
+    const actionPayload = {
+      id: state.instance.id,
+      type: newType
+    }
+
+    dispatch(rootActions.ADD_RESOURCE_TYPE, actionPayload, { root: true })
+  },
+  [actions.removePipelineType] ({ dispatch, state }, removedType) {
+    if (removedType === 'Pipeline') {
+      return
+    }
+
+    const actionPayload = {
+      id: state.instance.id,
+      type: removedType
+    }
+
+    dispatch(rootActions.REMOVE_RESOURCE_TYPE, actionPayload, { root: true })
   }
 }

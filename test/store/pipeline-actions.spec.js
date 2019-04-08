@@ -3,7 +3,7 @@ import {
   load, save, addStep, saveVariable,
   deleteStep, selectStep, updateStep,
   addVariable, deleteVariable, addPipeline,
-  select, publish } from '../../src/store/pipeline/action-types'
+  select, publish, addPipelineType, removePipelineType } from '../../src/store/pipeline/action-types'
 import * as mutations from '../../src/store/pipeline/mutation-types'
 import actions from '../../src/store/pipeline/actions'
 import * as sinon from 'sinon'
@@ -133,6 +133,7 @@ describe('pipeline store', () => {
           mutations.STEP_ADDED,
           sinon.match({
             step: sinon.match.has('id', '#step name')
+              .and(sinon.match.has('@type', 'Step'))
               .and(sinon.match.has('code:implementedBy', sinon.match.object))
               .and(sinon.match.has('code:arguments', sinon.match.array))
           })
@@ -464,6 +465,72 @@ describe('pipeline store', () => {
 
         // then
         assert(commit.notCalled)
+      })
+    })
+
+    describe(addPipelineType, () => {
+      it('dispatches action on root store', () => {
+        // given
+        const dispatch = sinon.spy()
+        const state = {
+          instance: {
+            id: 'urn:test:pipeline'
+          }
+        }
+
+        // when
+        actions.addPipelineType({ dispatch, state }, 'https://pipeline.described.at/Readable')
+
+        // then
+        assert(dispatch.calledWith(
+          rootActions.ADD_RESOURCE_TYPE,
+          sinon.match({
+            id: 'urn:test:pipeline',
+            type: 'https://pipeline.described.at/Readable'
+          }),
+          sinon.match({ root: true })
+        ))
+      })
+    })
+
+    describe(removePipelineType, () => {
+      it('dispatches action on root store', () => {
+        // given
+        const dispatch = sinon.spy()
+        const state = {
+          instance: {
+            id: 'urn:test:pipeline'
+          }
+        }
+
+        // when
+        actions.removePipelineType({ dispatch, state }, 'https://pipeline.described.at/Readable')
+
+        // then
+        assert(dispatch.calledWith(
+          rootActions.REMOVE_RESOURCE_TYPE,
+          sinon.match({
+            id: 'urn:test:pipeline',
+            type: 'https://pipeline.described.at/Readable'
+          }),
+          sinon.match({ root: true })
+        ))
+      })
+
+      it('does not remove Pipeline type', () => {
+        // given
+        const dispatch = sinon.spy()
+        const state = {
+          instance: {
+            id: 'urn:test:pipeline'
+          }
+        }
+
+        // when
+        actions.removePipelineType({ dispatch, state }, 'Pipeline')
+
+        // then
+        assert(dispatch.notCalled)
       })
     })
   })
