@@ -3,6 +3,7 @@ import Vue from 'vue/dist/vue.js'
 import Client from '../Client'
 import LocalStorageClient from '../Client/local'
 import pipelines from './pipelines'
+import operations from './operations'
 import jobs from './jobs'
 import pipeline from './pipeline/index'
 import mutations from './root/mutations'
@@ -23,7 +24,8 @@ export default new Vuex.Store({
   modules: {
     jobs,
     pipelines,
-    pipeline
+    pipeline,
+    operations
   },
   mutations,
   actions,
