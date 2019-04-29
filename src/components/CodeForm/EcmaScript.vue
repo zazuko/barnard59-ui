@@ -28,8 +28,8 @@ export default {
       FETCH_OPERATIONS
     ]),
     setLink (operation) {
-      debugger
       this.implementation['code:link'] = operation['code:implementedBy']['code:link']
+      this.$refs.search.inputValue = ''
     }
   },
   watch: {
@@ -41,9 +41,16 @@ export default {
 </script>
 
 <template>
-  <vue-bootstrap-typeahead
-    :data="operations"
-    v-model="operationSearch"
-    :serializer="op => op.label"
-    @hit="setLink"></vue-bootstrap-typeahead>
+  <div>
+    <vue-bootstrap-typeahead
+      ref="search"
+      :data="operations"
+      v-model="operationSearch"
+      :serializer="op => op.label"
+      placeholder="Type to find operation"
+      @hit="setLink"></vue-bootstrap-typeahead>
+    <div v-if="implementation['code:link']">
+      Selected: <pre style="font-weight: bold">{{ implementation['code:link']['@id'] }}</pre>
+    </div>
+  </div>
 </template>
