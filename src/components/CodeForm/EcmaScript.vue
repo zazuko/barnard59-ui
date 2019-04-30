@@ -40,6 +40,16 @@ export default {
 }
 </script>
 
+<style scoped>
+  pre {
+    font-weight: bold;
+  }
+
+  .comment {
+    font-size: small;
+  }
+</style>
+
 <template>
   <div>
     <vue-bootstrap-typeahead
@@ -48,9 +58,14 @@ export default {
       v-model="operationSearch"
       :serializer="op => op.label"
       placeholder="Type to find operation"
-      @hit="setLink"></vue-bootstrap-typeahead>
+      @hit="setLink">
+      <template slot="suggestion" slot-scope="{ data, htmlText }">
+        <div v-html="htmlText"></div>
+        <div class="comment">{{ data.comment }}</div>
+      </template>
+    </vue-bootstrap-typeahead>
     <div v-if="implementation['code:link']">
-      Selected: <pre style="font-weight: bold">{{ implementation['code:link']['@id'] }}</pre>
+      Selected: <pre>{{ implementation['code:link']['@id'] }}</pre>
     </div>
   </div>
 </template>
