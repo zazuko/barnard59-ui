@@ -67,6 +67,10 @@ class Client {
     return this.fetch(`${this.baseUrl}/pipeline/`)
   }
 
+  fetchOperations (query) {
+    return this.fetch(`${this.baseUrl}/operations?q=${query}`)
+  }
+
   createJob (pipelineIri) {
     return this.create(`${this.baseUrl}/job/`, ns.code('Run')).then(jobIri => {
       return this.fetch(jobIri.value)
