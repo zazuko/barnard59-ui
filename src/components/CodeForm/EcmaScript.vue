@@ -1,5 +1,6 @@
 <script>
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+import FormInput from 'bootstrap-vue/es/components/form-input/form-input'
 import { createNamespacedHelpers } from 'vuex'
 import { FETCH_OPERATIONS } from '../../store/operations/action-types'
 
@@ -8,7 +9,8 @@ const { mapState, mapActions } = createNamespacedHelpers('operations')
 export default {
   name: 'ImplementedByEcmascript',
   components: {
-    VueBootstrapTypeahead
+    VueBootstrapTypeahead,
+    FormInput
   },
   props: [
     'implementation'
@@ -28,7 +30,7 @@ export default {
       FETCH_OPERATIONS
     ]),
     setLink (operation) {
-      this.implementation['code:link'] = operation['code:implementedBy']['code:link']
+      this.implementation['code:link'] = operation['code:implementedBy']['code:link']['@id']
       this.$refs.search.inputValue = ''
     }
   },
@@ -41,10 +43,6 @@ export default {
 </script>
 
 <style scoped>
-  pre {
-    font-weight: bold;
-  }
-
   .comment {
     font-size: small;
   }
@@ -65,7 +63,7 @@ export default {
       </template>
     </vue-bootstrap-typeahead>
     <div v-if="implementation['code:link']">
-      Selected: <pre>{{ implementation['code:link']['@id'] }}</pre>
+      Selected: <form-input v-model="implementation['code:link']"></form-input>
     </div>
   </div>
 </template>
